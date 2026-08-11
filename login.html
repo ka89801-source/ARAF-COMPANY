@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0a1c28">
+<title>أعراف للأعمال | دخول المنشآت</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--nv:#1B3A4B;--nvl:#234D63;--tl:#3D7B8A;--gd:#C9A96E;--gdl:#D9BF8E;--ease:cubic-bezier(.4,0,.2,1)}
+body{font-family:'Tajawal',sans-serif;background:#0a1c28;min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.lbg{position:fixed;inset:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.12}
+.o1{width:500px;height:500px;background:var(--tl);top:-12%;right:-8%;animation:oF 22s ease-in-out infinite}
+.o2{width:400px;height:400px;background:var(--gd);bottom:-8%;left:-8%;animation:oF 22s ease-in-out infinite reverse}
+.o3{width:280px;height:280px;background:var(--nvl);top:45%;left:35%;animation:oF 18s ease-in-out infinite 5s}
+@keyframes oF{0%,100%{transform:translate(0,0)}33%{transform:translate(40px,-30px)}66%{transform:translate(-30px,40px)}}
+.lbg::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:56px 56px}
+.lcard{position:relative;z-index:2;width:100%;max-width:410px;margin:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:24px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);padding:36px 28px;animation:cIn .55s var(--ease) both}
+@keyframes cIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.ll{display:flex;flex-direction:column;align-items:center;margin-bottom:8px}
+.ll img{width:88px;height:88px;object-fit:contain;margin-bottom:10px}
+.biz-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 16px;border-radius:999px;background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.25);color:var(--gdl);font-size:12px;font-weight:800;margin:0 auto 20px;font-family:'Cairo',sans-serif}
+.biz-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--gd);box-shadow:0 0 8px rgba(201,169,110,.7);animation:pls 2s infinite}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.35}}
+.lhead{text-align:center;margin-bottom:22px}
+.lhead h1{font-family:'Cairo',sans-serif;font-size:19px;font-weight:800;color:#fff;line-height:1.6}
+.lhead p{font-size:12.5px;color:rgba(255,255,255,.4);margin-top:5px;line-height:1.8}
+.lform{display:flex;flex-direction:column;gap:13px}
+.lfg label{display:block;font-size:11.5px;color:rgba(255,255,255,.4);margin-bottom:4px;font-weight:600}
+.lfg input{width:100%;padding:12px 14px;border-radius:11px;border:1.5px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#fff;font-family:inherit;font-size:15px;outline:none;transition:border .25s,background .25s;letter-spacing:.5px}
+.lfg input::placeholder{color:rgba(255,255,255,.2);letter-spacing:0}
+.lfg input:focus{border-color:var(--gd);background:rgba(255,255,255,.07)}
+.lbtn{width:100%;padding:13px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--gd),var(--gdl));color:var(--nv);font-family:'Cairo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 18px rgba(201,169,110,.3);margin-top:4px}
+.lbtn:hover{transform:translateY(-2px)}.lbtn:active{transform:translateY(0)}
+.lbtn.shake{animation:shk .45s}
+@keyframes shk{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.lhint{margin-top:16px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);font-size:11.5px;color:rgba(255,255,255,.35);line-height:1.9;text-align:center}
+.lhint a{color:var(--gd);text-decoration:none;font-weight:700}
+.lfooter{text-align:center;margin-top:18px;font-size:9.5px;color:rgba(255,255,255,.15)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(14px);background:#1B3A4B;color:var(--gdl);padding:9px 22px;border-radius:9px;font-size:12.5px;font-weight:600;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.35);white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="lbg">
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+</div>
+
+<div class="lcard">
+  <div class="ll"><img src="logo.png" alt="أعراف"></div>
+  <div style="display:flex;justify-content:center"><span class="biz-badge"><span class="dot"></span>بوابة الأعمال</span></div>
+
+  <div class="lhead">
+    <h1>دخول المنشآت</h1>
+    <p>أدخل رمز منشأتك والرقم السري المرسل إليكم من فريق أعراف</p>
+  </div>
+
+  <div class="lform">
+    <div class="lfg">
+      <label>رمز المنشأة</label>
+      <input type="text" id="bizCode" placeholder="ARF-XXXX" autocomplete="off" autocapitalize="characters">
+    </div>
+    <div class="lfg">
+      <label>الرقم السري</label>
+      <input type="password" id="bizPin" placeholder="••••••" inputmode="numeric" maxlength="6" autocomplete="off">
+    </div>
+    <button class="lbtn" id="LB">الدخول إلى بوابة الأعمال</button>
+  </div>
+
+  <div class="lhint">
+    منشأتك ليست مشتركة بعد؟
+    <a href="index.html#join">اطلب انضمام منشأتك</a>
+    وسيتواصل معكم فريق أعراف لتفعيل حسابكم
+  </div>
+
+  <div class="lfooter">© 2026 شركة أعراف للمحاماة والاستشارات القانونية — جميع الحقوق محفوظة</div>
+</div>
+
+<div class="toast" id="T"></div>
+
+<script src="accounts.js"></script>
+<script>
+function $(id){return document.getElementById(id)}
+function toast(m){var t=$('T');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2400)}
+
+/* إن كانت هناك جلسة قائمة، ادخل مباشرة */
+try{
+  var s=JSON.parse(localStorage.getItem('araf_biz_session')||'null');
+  if(s&&s.code&&(window.ARAF_BIZ_ACCOUNTS||[]).some(function(a){return a.code===s.code})){
+    window.location.replace('platform.html');
+  }
+}catch(e){}
+
+function tryLogin(){
+  var code=$('bizCode').value.trim().toUpperCase();
+  var pin=$('bizPin').value.trim();
+
+  if(!code||!pin){toast('يرجى إدخال رمز المنشأة والرقم السري');bump();return}
+
+  var acc=(window.ARAF_BIZ_ACCOUNTS||[]).find(function(a){
+    return a.code.toUpperCase()===code && String(a.pin)===pin
+  });
+
+  if(!acc){toast('البيانات غير صحيحة — تأكد من الرمز والرقم السري');bump();return}
+
+  localStorage.setItem('araf_biz_session',JSON.stringify({code:acc.code,ts:Date.now()}));
+  /* علامة لعرض شاشة الترحيب الكاملة بعد الدخول */
+  sessionStorage.setItem('araf_biz_fresh_login','1');
+  window.location.href='platform.html';
+}
+
+function bump(){var b=$('LB');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
+
+$('LB').onclick=tryLogin;
+$('bizPin').addEventListener('keydown',function(e){if(e.key==='Enter')tryLogin()});
+$('bizCode').addEventListener('keydown',function(e){if(e.key==='Enter')$('bizPin').focus()});
+</script>
+</body>
+</html>
