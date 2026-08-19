@@ -48,51 +48,17 @@ function cycleDates(){
 (function splash(){
   var fresh=sessionStorage.getItem('araf_biz_fresh_login')==='1';
   sessionStorage.removeItem('araf_biz_fresh_login');
-
+  var sp=$('SPL');
   $('spEntity').textContent=entityShort();
   $('spHello').textContent=fresh?'أهلاً بكم في بوابة الأعمال':greetByTime()+'، وأهلاً بعودتكم';
   $('spSub').textContent='فريق '+ACC.type+'كم القانوني في أعراف جاهز لخدمتكم';
   $('spPlan').textContent=PLAN.name;
-
-  /* جسيمات ذهبية */
-  var cv=$('SPC'),cx=cv.getContext('2d'),W,H,PS=[];
-  function size(){W=cv.width=innerWidth;H=cv.height=innerHeight}
-  size();addEventListener('resize',size);
-  var N=Math.min(70,Math.floor(W/16));
-  for(var i=0;i<N;i++)PS.push({
-    x:Math.random()*W,y:Math.random()*H,
-    r:Math.random()*1.8+.4,
-    vx:(Math.random()-.5)*.25,vy:-(Math.random()*.35+.1),
-    a:Math.random()*.5+.15,tw:Math.random()*Math.PI*2
-  });
-  var run=true;
-  (function loop(){
-    if(!run)return;
-    cx.clearRect(0,0,W,H);
-    for(var i=0;i<PS.length;i++){
-      var p=PS[i];
-      p.x+=p.vx;p.y+=p.vy;p.tw+=.03;
-      if(p.y<-6){p.y=H+6;p.x=Math.random()*W}
-      if(p.x<-6)p.x=W+6;if(p.x>W+6)p.x=-6;
-      var al=p.a*(0.6+0.4*Math.sin(p.tw));
-      cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      cx.fillStyle='rgba(201,169,110,'+al.toFixed(3)+')';
-      cx.shadowColor='rgba(201,169,110,.8)';cx.shadowBlur=p.r*4;
-      cx.fill();cx.shadowBlur=0;
-    }
-    requestAnimationFrame(loop);
-  })();
-
-  var dur=fresh?4200:2400;
-  if(!fresh){
-    /* نسخة أسرع للزيارات المتكررة */
-    document.querySelectorAll('.sp-hello,.sp-entity,.sp-sub,.sp-seal,.sp-bar,.sp-logo').forEach(function(el){
-      el.style.animationDelay=(parseFloat(getComputedStyle(el).animationDelay||'0')*.45)+'s';
-    });
-  }
+  sp.classList.remove('gone','run');sp.classList.add('show');
+  void sp.offsetWidth;sp.classList.add('run');
+  var dur=fresh?4300:2600;
   setTimeout(function(){
-    $('SPL').classList.add('gone');
-    setTimeout(function(){run=false;$('SPL').remove()},900);
+    sp.classList.add('gone');
+    setTimeout(function(){sp.classList.remove('show','run');sp.remove()},900);
   },dur);
 })();
 
@@ -137,7 +103,7 @@ syncReqCount();
 /* ---------- التنقل ---------- */
 var cP='home';
 var PN={home:'لوحة المنشأة',services:'طلب خدمة قانونية',requests:'طلبات منشأتي',subscription:'باقة المنشأة'};
-function isMobile(){return innerWidth<=900}
+function isMobile(){return innerWidth<=720}
 function cSB(){if(isMobile()){$('SB').classList.remove('open');$('MO').classList.remove('show')}}
 function tSB(){if(isMobile()){$('SB').classList.toggle('open');$('MO').classList.toggle('show')}}
 function nav(p){
@@ -176,43 +142,36 @@ function quotaCard(k){
 }
 
 function svcCard(s,i){
-  var left=s.free?-2:quotaLeft(s.k);
-  var tag;
+  var left=s.free?-2:quotaLeft(s.k),tag;
   if(s.free)tag='<span class="svc-tag free">حسب الطلب</span>';
   else if(left<0)tag='<span class="svc-tag">بلا حدود</span>';
-  else if(left===0)tag='<span class="svc-tag" style="background:rgba(194,94,94,.08);color:#A34848;border-color:rgba(194,94,94,.15)">استُنفدت الحصة</span>';
+  else if(left===0)tag='<span class="svc-tag out">استُنفدت الحصة</span>';
   else tag='<span class="svc-tag">متبقٍ '+left+'</span>';
-  return'<button class="svc-card fu" style="animation-delay:.'+(i%6)+'s" onclick="openReq(\''+s.k+'\')"><div class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">'+s.ic+'</svg></div><h3>'+s.t+'</h3><p>'+s.d+'</p><div class="svc-meta">'+tag+'<span class="svc-go">اطلب الآن<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 19l7-7-7-7"/></svg></span></div></button>';
+  return'<button class="svc-card fu" style="animation-delay:.'+(i%6)+'s" onclick="openReq(\''+s.k+'\')"><div class="svc-ic"><svg viewBox="0 0 24 24">'+s.ic+'</svg></div><h3>'+s.t+'</h3><p>'+s.d+'</p><div class="svc-meta">'+tag+'<span class="svc-go">اطلب الآن <span class="arr">←</span></span></div></button>';
 }
 
 function managerCard(){
   var m=ACC.manager;if(!m)return'';
   var initial=m.name.replace(/^أ\.\s*/,'').charAt(0);
   var waMsg='السلام عليكم '+m.name+'، معكم '+entityShort()+' (رمز '+ACC.code+') — لدينا استفسار.';
+  var phone=m.phone||window.ARAF_BIZ_WHATSAPP||'';
   return'<div class="mgr-card fu" style="animation-delay:.05s">'
-    +'<div class="mgr-av-wrap"><div class="mgr-av-ring"></div><div class="mgr-av">'+esc(initial)+'</div><span class="mgr-dot"></span></div>'
-    +'<div class="mgr-body">'
-      +'<span class="mgr-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>الموكّل من أعراف لمنشأتكم</span>'
-      +'<div class="mgr-name">'+esc(m.name)+'</div>'
-      +'<div class="mgr-title">'+esc(m.title)+'</div>'
-      +'<span class="mgr-hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+esc(m.hours||'خلال ساعات العمل')+'</span>'
-    +'</div>'
-    +'<div class="mgr-acts">'
-      +'<a class="mgr-btn wa" href="https://wa.me/'+m.phone+'?text='+encodeURIComponent(waMsg)+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>تواصل واتساب</a>'
-      +'<a class="mgr-btn call" href="tel:+'+m.phone+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.64a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.44-1.25a2 2 0 0 1 2.11-.45c.85.33 1.74.56 2.64.68A2 2 0 0 1 22 16.92z"/></svg>اتصال</a>'
-    +'</div>'
+    +'<svg class="mgr-scale" viewBox="0 0 200 220" aria-hidden="true"><line x1="100" y1="18" x2="100" y2="178"/><line x1="34" y1="48" x2="166" y2="48"/><circle cx="100" cy="14" r="5"/><line x1="34" y1="48" x2="16" y2="102"/><line x1="34" y1="48" x2="52" y2="102"/><path d="M10 102 a24 14 0 0 0 48 0"/><line x1="166" y1="48" x2="148" y2="102"/><line x1="166" y1="48" x2="184" y2="102"/><path d="M142 102 a24 14 0 0 0 48 0"/><line x1="64" y1="192" x2="136" y2="192"/></svg>'
+    +'<div class="mgr-av-wrap"><div class="mgr-av">'+esc(initial)+'</div><span class="mgr-dot" aria-hidden="true"></span></div>'
+    +'<div class="mgr-body"><span class="mgr-eyebrow">الموكّل من أعراف لمنشأتكم</span><div class="mgr-name">'+esc(m.name)+'</div><div class="mgr-title">'+esc(m.title)+'</div><span class="mgr-hours"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+esc(m.hours||'خلال ساعات العمل')+'</span></div>'
+    +'<div class="mgr-acts"><a class="mgr-btn wa" href="https://wa.me/'+phone+'?text='+encodeURIComponent(waMsg)+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>تواصل واتساب</a><a class="mgr-btn call" href="tel:+'+phone+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.64a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.44-1.25a2 2 0 0 1 2.11-.45c.85.33 1.74.56 2.64.68A2 2 0 0 1 22 16.92z"/></svg>اتصال</a></div>'
   +'</div>';
 }
 
 function vHome(){
   var c=cycleDates();
-  var h='<div class="dw fu"><h1>'+greetByTime()+'، فريق <span class="gld">'+esc(entityShort())+'</span> 👋</h1><div class="dwsub">هذه لوحة منشأتكم في أعراف — رصيد <b>'+PLAN.name+'</b> يتجدد بعد <b>'+c.daysLeft+' يوماً</b>. كيف يمكن لفريقكم القانوني خدمتكم اليوم؟</div></div>';
+  var h='<div class="dw fu"><h1>'+greetByTime()+'، فريق <em>'+esc(entityShort())+'</em></h1><div class="dwsub">هذه لوحة منشأتكم في أعراف — رصيد <b>'+PLAN.name+'</b> يتجدد بعد <b>'+c.daysLeft+' يوماً</b>. كيف يمكن لفريقكم القانوني خدمتكم اليوم؟</div></div>';
   h+=managerCard();
   h+='<div class="sec-title fu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>رصيد الباقة هذا الشهر</div>';
   h+='<div class="qgrid">';
   Object.keys(PLAN.quotas).forEach(function(k){h+=quotaCard(k)});
   h+='</div>';
-  h+='<div class="sec-title fu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>اطلبوا خدمة قانونية</div>';
+  h+='<div class="sec-title fu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>اطلبوا خدمة قانونية</div>';
   h+='<div class="svc-grid">';
   SVC.forEach(function(s,i){h+=svcCard(s,i)});
   h+='</div>';
@@ -220,7 +179,7 @@ function vHome(){
 }
 
 function vServices(){
-  var h='<div class="dw fu"><h1>طلب خدمة <span class="gld">قانونية</span></h1><div class="dwsub">اختاروا الخدمة، واملؤوا التفاصيل، وسيتولى فريق '+esc(entityShort())+' القانوني في أعراف التنفيذ ضمن باقتكم.</div></div>';
+  var h='<div class="dw fu"><h1>طلب خدمة <em>قانونية</em></h1><div class="dwsub">اختاروا الخدمة، واملؤوا التفاصيل، وسيتولى فريق '+esc(entityShort())+' القانوني في أعراف التنفيذ ضمن باقتكم.</div></div>';
   h+='<div class="svc-grid">';
   SVC.forEach(function(s,i){h+=svcCard(s,i)});
   h+='</div>';
@@ -229,7 +188,7 @@ function vServices(){
 
 function vRequests(){
   var l=getReqs();
-  var h='<div class="dw fu"><h1>طلبات <span class="gld">'+esc(entityShort())+'</span></h1><div class="dwsub">سجل الطلبات المرسلة من هذا الجهاز — يتواصل معكم فريق أعراف لتأكيد كل طلب وتنفيذه.</div></div>';
+  var h='<div class="dw fu"><h1>طلبات <em>'+esc(entityShort())+'</em></h1><div class="dwsub">سجل الطلبات المرسلة من هذا الجهاز — يتواصل معكم فريق أعراف لتأكيد كل طلب وتنفيذه.</div></div>';
   if(!l.length){
     h+='<div class="req-empty fu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></svg><p>لم ترسلوا أي طلب بعد.<br>ابدؤوا بطلب أول خدمة قانونية لمنشأتكم.</p><button onclick="nav(\'services\')">طلب خدمة الآن</button></div>';
     return h;
@@ -277,9 +236,11 @@ function openReq(k){
   $('mdlA').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>إرسال الطلب';
   $('mdlA').onclick=sendReq;
   $('MDL').classList.add('show');
-  setTimeout(function(){$('rqSub').focus()},80);
+  setTimeout(function(){var f=$('rqSub');if(f&&!isMobile())f.focus()},80);
 }
 function cM(){$('MDL').classList.remove('show')}
+$('MDL').addEventListener('click',function(e){if(e.target===this)cM()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')cM()});
 function sendReq(){
   var sub=$('rqSub').value.trim(),det=$('rqDet').value.trim(),who=$('rqName').value.trim();
   if(!sub){toast('يرجى كتابة عنوان الطلب');return}
