@@ -1,308 +1,209 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>أعراف | الشروط والأحكام</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0F2733">
+<title>أعراف للأعمال | الشروط والأحكام</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --nv:#1B3A4B;--nvl:#234D63;--nvd:#0F2733;--nvdd:#0A1E28;
+  --gd:#C9A96E;--gdl:#D9BF8E;--gdd:#A8874C;
+  --bg:#FAFAF7;--t1:#1B2B36;--t2:#51687A;--tm:#93A5B1;
+  --line:rgba(27,58,75,.09);--line-gold:rgba(201,169,110,.28);
+  --sh-3:0 4px 8px rgba(27,58,75,.05),0 24px 56px rgba(27,58,75,.11);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:rgba(201,169,110,.3)}
+:focus-visible{outline:2px solid var(--gd);outline-offset:3px;border-radius:8px}
+.wrap{max-width:920px;margin:0 auto;padding:0 22px}
 
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
+/* الرأس الداكن */
+.hero{
+  position:relative;color:#fff;overflow:hidden;padding-bottom:110px;
+  background:
+    radial-gradient(700px 380px at 92% 2%, rgba(201,169,110,.14), transparent 55%),
+    radial-gradient(1100px 500px at 85% -10%, rgba(61,123,138,.22), transparent 60%),
+    linear-gradient(165deg, var(--nvd) 0%, var(--nv) 60%, var(--nvl) 100%);
+}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:22px 0}
+.brand{display:flex;align-items:center;gap:13px;text-decoration:none}
+.brand img{width:46px;height:46px;object-fit:contain;border-radius:12px;background:#fff;padding:5px;border:1px solid rgba(255,255,255,.14)}
+.brand-name{font-family:'Cairo',sans-serif;font-size:17px;font-weight:800;color:#fff;line-height:1.25}
+.brand-sub{display:block;color:var(--gdl);font-size:9.5px;font-weight:700;letter-spacing:2.6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 24px;border-radius:100px;font-family:'Cairo',sans-serif;font-size:13.5px;font-weight:800;text-decoration:none;cursor:pointer;border:1px solid rgba(255,255,255,.25);color:#fff;background:transparent;transition:border-color .3s var(--ease),color .3s var(--ease),transform .3s var(--ease)}
+.btn .arr{display:inline-block;transition:transform .3s var(--ease)}
+.btn:hover{border-color:var(--gd);color:var(--gdl)}
+.btn:hover .arr{transform:translateX(-4px)}
+.hero-in{position:relative;z-index:2;padding-top:36px;max-width:620px}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;color:var(--gdl);font-size:12.5px;font-weight:700;letter-spacing:.6px;margin-bottom:18px}
+.eyebrow::before,.eyebrow::after{content:'';width:26px;height:1px;background:linear-gradient(90deg,transparent,var(--gd))}
+.eyebrow::after{background:linear-gradient(90deg,var(--gd),transparent)}
+.hero h1{font-family:'Cairo',sans-serif;font-size:clamp(27px,3.5vw,42px);font-weight:900;line-height:1.45;letter-spacing:-.5px;margin-bottom:12px}
+.hero h1 em{font-style:normal;color:var(--gdl)}
+.hero p{font-weight:300;font-size:14.5px;color:rgba(255,255,255,.68);line-height:2.05;max-width:520px}
+.scale-mark{position:absolute;left:4%;top:50%;transform:translateY(-50%);width:min(260px,22vw);opacity:.4;pointer-events:none;z-index:1}
+.scale-mark path,.scale-mark line,.scale-mark circle{stroke:url(#gGold);stroke-width:1.4;fill:none;stroke-linecap:round}
 
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
+/* بطاقة المحتوى العائمة */
+.terms-card{
+  position:relative;z-index:10;margin-top:-64px;margin-bottom:0;
+  background:#fff;border:1px solid var(--line);border-radius:22px;
+  box-shadow:var(--sh-3);padding:44px 42px;
+}
+.terms-badge{display:inline-flex;align-items:center;gap:11px;color:var(--gdd);font-size:12px;font-weight:800;letter-spacing:.6px;margin-bottom:18px}
+.terms-badge::before,.terms-badge::after{content:'';width:22px;height:1px;background:linear-gradient(90deg,transparent,var(--gd))}
+.terms-badge::after{background:linear-gradient(90deg,var(--gd),transparent)}
+.terms-card h2{
+  font-family:'Cairo',sans-serif;color:var(--nv);font-size:18px;font-weight:800;
+  letter-spacing:-.2px;line-height:1.6;margin:34px 0 10px;
+  display:flex;align-items:center;gap:12px;
+}
+.terms-card h2::after{content:'';flex:1;height:1px;background:var(--line)}
+.terms-card>p{color:var(--t2);font-size:14.5px;line-height:2.1;margin-bottom:6px}
+.last-update{margin-top:38px;padding-top:20px;border-top:1px solid var(--line);color:var(--tm);font-size:12.5px;font-weight:300}
 
-    :root{
-      --nv:#1B3A4B;
-      --nvl:#234D63;
-      --tl:#3D7B8A;
-      --gd:#C9A96E;
-      --gdl:#D9BF8E;
-      --bg:#FAFAF7;
-      --cd:#FFFFFF;
-      --t1:#1B2B36;
-      --t2:#4A6070;
-      --tm:#8A9DAB;
-      --bd:rgba(27,58,75,.08);
-    }
+/* الفوتر */
+.foot{background:var(--nvdd);color:rgba(255,255,255,.55);padding:34px 0;text-align:center;font-size:12.5px;line-height:2.1;font-weight:300;margin-top:105px}
+.foot a{color:var(--gdl);text-decoration:none;font-weight:500}
 
-    body{
-      font-family:'Tajawal',sans-serif;
-      background:var(--bg);
-      color:var(--t1);
-      line-height:2;
-      min-height:100vh;
-    }
-
-    body::before{
-      content:'';
-      position:fixed;
-      inset:0;
-      background:
-        radial-gradient(ellipse 60% 50% at 12% 6%,rgba(201,169,110,.08) 0%,transparent 60%),
-        radial-gradient(ellipse 50% 45% at 88% 90%,rgba(61,123,138,.06) 0%,transparent 60%);
-      pointer-events:none;
-      z-index:0;
-    }
-
-    body::after{
-      content:'';
-      position:fixed;
-      inset:0;
-      background-image:
-        linear-gradient(rgba(27,58,75,.018) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(27,58,75,.018) 1px,transparent 1px);
-      background-size:56px 56px;
-      pointer-events:none;
-      z-index:0;
-    }
-
-    .terms-page{
-      position:relative;
-      z-index:1;
-      max-width:980px;
-      margin:0 auto;
-      padding:32px 18px 60px;
-    }
-
-    .terms-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:24px;
-      flex-wrap:wrap;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      text-decoration:none;
-    }
-
-    .brand img{
-      width:44px;
-      height:44px;
-      object-fit:contain;
-      border-radius:12px;
-      background:#fff;
-      border:1px solid var(--bd);
-      box-shadow:0 4px 14px rgba(27,58,75,.08);
-      padding:4px;
-    }
-
-    .brand-name{
-      font-family:'Cairo',sans-serif;
-      font-size:16px;
-      font-weight:900;
-      color:var(--nv);
-      line-height:1.2;
-    }
-
-    .brand-sub{
-      display:block;
-      color:var(--gd);
-      font-size:10px;
-      font-weight:800;
-      letter-spacing:1.6px;
-      margin-top:2px;
-      text-transform:uppercase;
-    }
-
-    .back-link{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 16px;
-      border-radius:12px;
-      background:#fff;
-      border:1px solid var(--bd);
-      color:var(--nv);
-      text-decoration:none;
-      font-size:13px;
-      font-weight:800;
-      box-shadow:0 4px 14px rgba(27,58,75,.05);
-    }
-
-    .terms-card{
-      background:rgba(255,255,255,.95);
-      border:1px solid var(--bd);
-      border-radius:28px;
-      padding:34px 30px;
-      box-shadow:0 18px 50px rgba(27,58,75,.10);
-    }
-
-    .terms-badge{
-      display:inline-flex;
-      padding:6px 14px;
-      border-radius:999px;
-      background:rgba(201,169,110,.10);
-      border:1px solid rgba(201,169,110,.18);
-      color:var(--gd);
-      font-size:12px;
-      font-weight:800;
-      margin-bottom:12px;
-    }
-
-    h1{
-      font-family:'Cairo',sans-serif;
-      color:var(--nv);
-      font-size:32px;
-      line-height:1.5;
-      margin-bottom:14px;
-      font-weight:900;
-    }
-
-    h2{
-      font-family:'Cairo',sans-serif;
-      color:var(--nv);
-      font-size:20px;
-      margin-top:28px;
-      margin-bottom:8px;
-      font-weight:900;
-    }
-
-    p{
-      color:var(--t2);
-      font-size:15px;
-      margin-bottom:8px;
-    }
-
-    .last-update{
-      margin-top:30px;
-      padding-top:18px;
-      border-top:1px solid rgba(27,58,75,.08);
-      color:var(--tm);
-      font-size:13px;
-    }
-
-    @media(max-width:600px){
-      .terms-card{
-        padding:26px 20px;
-        border-radius:24px;
-      }
-
-      h1{
-        font-size:25px;
-      }
-
-      h2{
-        font-size:18px;
-      }
-
-      p{
-        font-size:14px;
-      }
-    }
-  </style>
+@media(max-width:720px){
+  .hero{padding-bottom:100px}
+  .hero-in{padding-top:24px}
+  .hero h1{font-size:clamp(24px,7vw,32px)}
+  .scale-mark{left:auto;right:-30px;top:10%;transform:none;width:130px;opacity:.13}
+  .terms-card{margin-top:-58px;padding:30px 22px;border-radius:22px}
+  .terms-card h2{font-size:16px}
+  .terms-card>p{font-size:14px}
+  .btn{padding:10px 18px;font-size:12.5px}
+  .foot{margin-top:70px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
-
 <body>
-  <main class="terms-page">
 
-    <div class="terms-top">
-      <a href="index.html" class="brand">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#D9BF8E"/><stop offset="1" stop-color="#C9A96E"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="index.html">
         <img src="logo.png" alt="شعار أعراف">
-        <div>
-          <div class="brand-name">أعراف</div>
-          <span class="brand-sub">LEGAL OS</span>
-        </div>
+        <div><div class="brand-name">أعراف للأعمال</div><span class="brand-sub">BUSINESS</span></div>
       </a>
-
-      <a href="index.html" class="back-link">العودة للرئيسية</a>
+      <a class="btn" href="index.html">العودة للرئيسية <span class="arr">←</span></a>
     </div>
+    <div class="hero-in">
+      <span class="eyebrow">وثيقة قانونية</span>
+      <h1>الشروط <em>والأحكام</em></h1>
+      <p>باستخدامكم لمنصة أعراف أو طلبكم لأي من خدماتها، فإنكم تقرون بقراءة هذه الشروط وفهمها والموافقة على الالتزام بها.</p>
+    </div>
+  </div>
+  <svg class="scale-mark" viewBox="0 0 200 220" aria-hidden="true">
+    <line x1="100" y1="18" x2="100" y2="178"/>
+    <line x1="34" y1="48" x2="166" y2="48"/>
+    <circle cx="100" cy="14" r="5"/>
+    <line x1="34" y1="48" x2="16" y2="102"/><line x1="34" y1="48" x2="52" y2="102"/>
+    <path d="M10 102 a24 14 0 0 0 48 0"/>
+    <line x1="166" y1="48" x2="148" y2="102"/><line x1="166" y1="48" x2="184" y2="102"/>
+    <path d="M142 102 a24 14 0 0 0 48 0"/>
+    <line x1="64" y1="192" x2="136" y2="192"/>
+  </svg>
+</header>
 
-    <section class="terms-card">
-      <div class="terms-badge">وثيقة قانونية</div>
-      <h1>الشروط والأحكام</h1>
-
-      <p>
-        مرحبًا بك في منصة أعراف للخدمات القانونية. باستخدامك للمنصة أو طلبك لأي من خدماتها، فإنك تقر بأنك قرأت هذه الشروط والأحكام وفهمتها ووافقت على الالتزام بها، سواءً كنت مستخدمًا مسجلًا أو زائرًا للمنصة.
+<main class="wrap">
+  <section class="terms-card">
+    <span class="terms-badge">سارية على منصتي أعراف — الأفراد والأعمال</span>
+    <p>
+      مرحبًا بك في منصة أعراف للخدمات القانونية. باستخدامك للمنصة أو طلبك لأي من خدماتها، فإنك تقر بأنك قرأت هذه الشروط والأحكام وفهمتها ووافقت على الالتزام بها، سواءً كنت مستخدمًا مسجلًا أو زائرًا للمنصة.
       </p>
-
       <h2>أولًا: التعريفات</h2>
       <p>
-        يقصد بـ "المنصة" موقع أعراف الإلكتروني وما يتبعه من صفحات وخدمات رقمية. ويقصد بـ "المستخدم" أو "العميل" كل شخص يستخدم المنصة أو يطلب إحدى خدماتها. ويقصد بـ "الخدمات" الخدمات القانونية المباشرة أو الرقمية التي تقدمها المنصة، بما في ذلك الاستشارات، إعداد المذكرات، مراجعة وصياغة العقود، خدمات ناجز، دراسة القضايا، والمساعد القانوني الذكي.
+      يقصد بـ "المنصة" موقع أعراف الإلكتروني وما يتبعه من صفحات وخدمات رقمية. ويقصد بـ "المستخدم" أو "العميل" كل شخص يستخدم المنصة أو يطلب إحدى خدماتها. ويقصد بـ "الخدمات" الخدمات القانونية المباشرة أو الرقمية التي تقدمها المنصة، بما في ذلك الاستشارات، إعداد المذكرات، مراجعة وصياغة العقود، خدمات ناجز، دراسة القضايا، والمساعد القانوني الذكي.
       </p>
-
       <h2>ثانيًا: طبيعة الخدمات</h2>
       <p>
-        تقدم منصة أعراف خدمات قانونية مساعدة ومباشرة وفقًا للبيانات والمستندات التي يزودها العميل. وقد تكون بعض الخدمات مقدمة بواسطة فريق قانوني مختص، بينما تكون بعض الأدوات الرقمية، مثل المساعد القانوني الذكي، أدوات معلوماتية مساعدة لا تُعد بذاتها استشارة قانونية نهائية أو تمثيلًا نظاميًا أمام الجهات القضائية أو الإدارية.
+      تقدم منصة أعراف خدمات قانونية مساعدة ومباشرة وفقًا للبيانات والمستندات التي يزودها العميل. وقد تكون بعض الخدمات مقدمة بواسطة فريق قانوني مختص، بينما تكون بعض الأدوات الرقمية، مثل المساعد القانوني الذكي، أدوات معلوماتية مساعدة لا تُعد بذاتها استشارة قانونية نهائية أو تمثيلًا نظاميًا أمام الجهات القضائية أو الإدارية.
       </p>
-
       <h2>ثالثًا: المساعد القانوني الذكي</h2>
       <p>
-        يقر المستخدم بأن المساعد القانوني الذكي هو أداة معلوماتية تعتمد على معالجة السؤال والبحث في المصادر المتاحة، ولا يُعد بديلًا عن مراجعة محامٍ مرخص أو مستشار قانوني مختص، ولا تتحمل المنصة مسؤولية أي قرار يتخذه المستخدم بناءً على مخرجات الأداة دون الرجوع إلى مختص.
+      يقر المستخدم بأن المساعد القانوني الذكي هو أداة معلوماتية تعتمد على معالجة السؤال والبحث في المصادر المتاحة، ولا يُعد بديلًا عن مراجعة محامٍ مرخص أو مستشار قانوني مختص، ولا تتحمل المنصة مسؤولية أي قرار يتخذه المستخدم بناءً على مخرجات الأداة دون الرجوع إلى مختص.
       </p>
-
       <h2>رابعًا: طلب الخدمات المباشرة</h2>
       <p>
-        يلتزم العميل عند طلب أي خدمة مباشرة بتزويد المنصة ببيانات صحيحة وكاملة، بما في ذلك الاسم ورقم الجوال ووصف الطلب والمرفقات اللازمة. وتحتفظ المنصة بحق طلب معلومات إضافية متى كان ذلك لازمًا لفهم الطلب أو تنفيذه.
+      يلتزم العميل عند طلب أي خدمة مباشرة بتزويد المنصة ببيانات صحيحة وكاملة، بما في ذلك الاسم ورقم الجوال ووصف الطلب والمرفقات اللازمة. وتحتفظ المنصة بحق طلب معلومات إضافية متى كان ذلك لازمًا لفهم الطلب أو تنفيذه.
       </p>
-
       <h2>خامسًا: الأسعار والدفع</h2>
       <p>
-        تكون أسعار الخدمات كما هي موضحة في صفحة الخدمات المباشرة وقت تقديم الطلب، وقد تختلف الأسعار بحسب طبيعة الخدمة أو نطاقها أو المستندات المقدمة. وبعد إرسال الطلب، يتواصل فريق أعراف مع العميل لتأكيد التفاصيل وتزويده بآلية السداد المناسبة، ولا يبدأ تنفيذ الخدمة المدفوعة إلا بعد إتمام السداد أو الاتفاق على آلية السداد، ما لم تنص المنصة على خلاف ذلك.
+      تكون أسعار الخدمات كما هي موضحة في صفحة الخدمات المباشرة وقت تقديم الطلب، وقد تختلف الأسعار بحسب طبيعة الخدمة أو نطاقها أو المستندات المقدمة. وبعد إرسال الطلب، يتواصل فريق أعراف مع العميل لتأكيد التفاصيل وتزويده بآلية السداد المناسبة، ولا يبدأ تنفيذ الخدمة المدفوعة إلا بعد إتمام السداد أو الاتفاق على آلية السداد، ما لم تنص المنصة على خلاف ذلك.
       </p>
-
       <h2>سادسًا: المواعيد والتنفيذ</h2>
       <p>
-        تسعى منصة أعراف إلى تنفيذ الخدمات خلال مدة مناسبة بحسب طبيعة كل طلب، إلا أن المدد المذكورة في المنصة أو أثناء التواصل تعد تقديرية ما لم يتم الاتفاق صراحة على موعد ملزم. وقد يتأثر وقت التنفيذ بنقص المعلومات أو تأخر العميل في تزويد المستندات أو تعقيد الطلب.
+      تسعى منصة أعراف إلى تنفيذ الخدمات خلال مدة مناسبة بحسب طبيعة كل طلب، إلا أن المدد المذكورة في المنصة أو أثناء التواصل تعد تقديرية ما لم يتم الاتفاق صراحة على موعد ملزم. وقد يتأثر وقت التنفيذ بنقص المعلومات أو تأخر العميل في تزويد المستندات أو تعقيد الطلب.
       </p>
-
       <h2>سابعًا: مسؤوليات العميل</h2>
       <p>
-        يلتزم العميل بصحة البيانات والمستندات المقدمة، وبأن له الحق النظامي في تقديمها واستخدامها. كما يلتزم بعدم استخدام المنصة لأي غرض مخالف للأنظمة أو الآداب العامة أو حقوق الغير، وألا يقدم معلومات مضللة أو مستندات مزورة أو بيانات تخص الغير دون مسوغ مشروع.
+      يلتزم العميل بصحة البيانات والمستندات المقدمة، وبأن له الحق النظامي في تقديمها واستخدامها. كما يلتزم بعدم استخدام المنصة لأي غرض مخالف للأنظمة أو الآداب العامة أو حقوق الغير، وألا يقدم معلومات مضللة أو مستندات مزورة أو بيانات تخص الغير دون مسوغ مشروع.
       </p>
-
       <h2>ثامنًا: السرية وحماية البيانات</h2>
       <p>
-        تلتزم منصة أعراف بالتعامل مع بيانات العملاء ومرفقاتهم بسرية ومهنية، ولا تستخدم البيانات إلا للأغراض المرتبطة بتقديم الخدمة أو تحسينها أو التواصل مع العميل أو الوفاء بالمتطلبات النظامية. ويخضع التعامل مع البيانات الشخصية لسياسة الخصوصية المنشورة في المنصة.
+      تلتزم منصة أعراف بالتعامل مع بيانات العملاء ومرفقاتهم بسرية ومهنية، ولا تستخدم البيانات إلا للأغراض المرتبطة بتقديم الخدمة أو تحسينها أو التواصل مع العميل أو الوفاء بالمتطلبات النظامية. ويخضع التعامل مع البيانات الشخصية لسياسة الخصوصية المنشورة في المنصة.
       </p>
-
       <h2>تاسعًا: المرفقات والمستندات</h2>
       <p>
-        يتحمل العميل مسؤولية التأكد من أن المرفقات المرسلة واضحة وصحيحة وكاملة. ولا تتحمل المنصة مسؤولية أي نتيجة أو تأخير ناشئ عن نقص المستندات أو عدم وضوحها أو عدم صحة المعلومات الواردة فيها.
+      يتحمل العميل مسؤولية التأكد من أن المرفقات المرسلة واضحة وصحيحة وكاملة. ولا تتحمل المنصة مسؤولية أي نتيجة أو تأخير ناشئ عن نقص المستندات أو عدم وضوحها أو عدم صحة المعلومات الواردة فيها.
       </p>
-
       <h2>عاشرًا: حدود المسؤولية</h2>
       <p>
-        لا تتحمل المنصة أي مسؤولية عن خسائر أو أضرار مباشرة أو غير مباشرة تنتج عن استخدام الخدمات الرقمية أو الاعتماد على معلومات غير مكتملة مقدمة من العميل. كما لا تضمن المنصة نتيجة قضائية أو إدارية معينة، إذ تخضع النتائج لتقدير الجهات المختصة والوقائع والمستندات والأنظمة ذات الصلة.
+      لا تتحمل المنصة أي مسؤولية عن خسائر أو أضرار مباشرة أو غير مباشرة تنتج عن استخدام الخدمات الرقمية أو الاعتماد على معلومات غير مكتملة مقدمة من العميل. كما لا تضمن المنصة نتيجة قضائية أو إدارية معينة، إذ تخضع النتائج لتقدير الجهات المختصة والوقائع والمستندات والأنظمة ذات الصلة.
       </p>
-
       <h2>الحادي عشر: الإلغاء والاسترداد</h2>
       <p>
-        تخضع طلبات الإلغاء أو الاسترداد لطبيعة الخدمة ومرحلة تنفيذها. فإذا بدأ الفريق في دراسة الطلب أو إعداد المخرجات أو تقديم الخدمة، فقد لا يكون المبلغ قابلًا للاسترداد كليًا أو جزئيًا. ويجوز للمنصة دراسة كل حالة على حدة وفقًا لظروفها.
+      تخضع طلبات الإلغاء أو الاسترداد لطبيعة الخدمة ومرحلة تنفيذها. فإذا بدأ الفريق في دراسة الطلب أو إعداد المخرجات أو تقديم الخدمة، فقد لا يكون المبلغ قابلًا للاسترداد كليًا أو جزئيًا. ويجوز للمنصة دراسة كل حالة على حدة وفقًا لظروفها.
       </p>
-
       <h2>الثاني عشر: الملكية الفكرية</h2>
       <p>
-        جميع عناصر المنصة، بما في ذلك التصميمات والنصوص والواجهات والشعارات والمحتوى الرقمي، مملوكة لمنصة أعراف أو مرخصة لها، ولا يجوز نسخها أو إعادة استخدامها أو نشرها دون موافقة خطية مسبقة.
+      جميع عناصر المنصة، بما في ذلك التصميمات والنصوص والواجهات والشعارات والمحتوى الرقمي، مملوكة لمنصة أعراف أو مرخصة لها، ولا يجوز نسخها أو إعادة استخدامها أو نشرها دون موافقة خطية مسبقة.
       </p>
-
       <h2>الثالث عشر: الروابط والخدمات الخارجية</h2>
       <p>
-        قد تتضمن المنصة روابط أو إشارات إلى مواقع أو منصات خارجية، ولا تتحمل أعراف مسؤولية محتوى تلك المواقع أو سياساتها أو طريقة تعاملها مع البيانات.
+      قد تتضمن المنصة روابط أو إشارات إلى مواقع أو منصات خارجية، ولا تتحمل أعراف مسؤولية محتوى تلك المواقع أو سياساتها أو طريقة تعاملها مع البيانات.
       </p>
-
       <h2>الرابع عشر: تعديل الشروط</h2>
       <p>
-        تحتفظ منصة أعراف بحق تعديل هذه الشروط والأحكام في أي وقت، ويكون التعديل نافذًا من تاريخ نشره في المنصة، ما لم يذكر خلاف ذلك. ويعد استمرار استخدام المستخدم للمنصة بعد التعديل قبولًا بالشروط المعدلة.
+      تحتفظ منصة أعراف بحق تعديل هذه الشروط والأحكام في أي وقت، ويكون التعديل نافذًا من تاريخ نشره في المنصة، ما لم يذكر خلاف ذلك. ويعد استمرار استخدام المستخدم للمنصة بعد التعديل قبولًا بالشروط المعدلة.
       </p>
-
       <h2>الخامس عشر: النظام الواجب التطبيق والاختصاص</h2>
       <p>
-        تخضع هذه الشروط والأحكام للأنظمة المعمول بها في المملكة العربية السعودية، وتختص الجهات القضائية المختصة في المملكة بنظر أي نزاع ينشأ عن استخدام المنصة أو الخدمات، ما لم يتم الاتفاق على خلاف ذلك كتابةً.
+      تخضع هذه الشروط والأحكام للأنظمة المعمول بها في المملكة العربية السعودية، وتختص الجهات القضائية المختصة في المملكة بنظر أي نزاع ينشأ عن استخدام المنصة أو الخدمات، ما لم يتم الاتفاق على خلاف ذلك كتابةً.
       </p>
-
       <h2>السادس عشر: التواصل</h2>
       <p>
-        لأي استفسار أو شكوى أو طلب دعم فني، يمكن للمستخدم التواصل مع فريق أعراف من خلال نموذج الدعم الفني المتاح في المنصة.
+      لأي استفسار أو شكوى أو طلب دعم فني، يمكن للمستخدم التواصل مع فريق أعراف من خلال نموذج الدعم الفني المتاح في المنصة.
       </p>
+    <div class="last-update">آخر تحديث: 2026</div>
+  </section>
+</main>
 
-      <div class="last-update">
-        آخر تحديث: 2026
-      </div>
-    </section>
-  </main>
+<footer class="foot">
+  <div class="wrap">
+    شركة أعراف للمحاماة والاستشارات القانونية © 2026 — جميع الحقوق محفوظة<br>
+    <a href="index.html">الرئيسية</a> • <a href="login.html">دخول المنشآت</a>
+  </div>
+</footer>
+
 </body>
 </html>

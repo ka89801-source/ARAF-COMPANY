@@ -2,15 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0F2733">
-<title>أعراف للأعمال | إدارة قانونية باشتراك شهري</title>
-<meta name="description" content="أعراف للأعمال — باقات قانونية شهرية للشركات والمؤسسات في السعودية: استشارات، عقود، مذكرات وخدمات ناجز بتنفيذ فريق قانوني مختص.">
+<title>أعراف للأعمال | حماية قانونية مستمرة لمنشأتك</title>
+<meta name="description" content="أعراف للأعمال — باقات قانونية شهرية للشركات والمؤسسات في السعودية: استشارات، عقود، مذكرات، خدمات ناجز، بتنفيذ محامين مرخصين وسعر ثابت.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --nv:#1B3A4B;--nvl:#234D63;--nvd:#0F2733;--nvdd:#0A1E28;--tl:#3D7B8A;
@@ -20,34 +19,31 @@
   --sh-1:0 1px 2px rgba(27,58,75,.04),0 4px 16px rgba(27,58,75,.05);
   --sh-2:0 2px 4px rgba(27,58,75,.04),0 12px 32px rgba(27,58,75,.08);
   --sh-3:0 4px 8px rgba(27,58,75,.05),0 24px 56px rgba(27,58,75,.11);
-  --err:#B91C1C;--warn:#B45309;
-  --sw:268px;--ease:cubic-bezier(.22,.61,.36,1);
-  --hero-grad:
-    radial-gradient(700px 380px at 92% 2%, rgba(201,169,110,.14), transparent 55%),
-    radial-gradient(1100px 500px at 85% -10%, rgba(61,123,138,.22), transparent 60%),
-    linear-gradient(165deg, #0F2733 0%, #1B3A4B 60%, #234D63 100%);
+  --ease:cubic-bezier(.22,.61,.36,1);
 }
 html{scroll-behavior:smooth}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 ::selection{background:rgba(201,169,110,.3)}
-:focus-visible{outline:2px solid var(--gd);outline-offset:3px;border-radius:8px}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:rgba(27,58,75,.14);border-radius:3px}
-.view{display:none}.view.show{display:block}
+:focus-visible{outline:2px solid var(--gd);outline-offset:3px;border-radius:6px}
 .wrap{max-width:1140px;margin:0 auto;padding:0 22px}
 
-.mock-logo{border-radius:14px;background:#fff;border:1px solid var(--line-gold);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.mock-logo svg{stroke:var(--gdd);fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5}
-.mock-logo.dark{background:rgba(201,169,110,.1);border-color:rgba(217,191,142,.35)}
-.mock-logo.dark svg{stroke:var(--gdl)}
+/* ============ الرأس الداكن ============ */
+.hero{
+  position:relative;color:#fff;overflow:hidden;
+  background:
+    radial-gradient(700px 380px at 92% 2%, rgba(201,169,110,.14), transparent 55%),
+    radial-gradient(1100px 500px at 85% -10%, rgba(61,123,138,.22), transparent 60%),
+    linear-gradient(165deg, var(--nvd) 0%, var(--nv) 60%, var(--nvl) 100%);
+  padding-bottom:128px;
+}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
+.brand{display:flex;align-items:center;gap:13px;text-decoration:none}
+.brand img{width:46px;height:46px;object-fit:contain;border-radius:12px;background:#fff;padding:5px;border:1px solid rgba(255,255,255,.14)}
+.brand-name{font-family:'Cairo',sans-serif;font-size:17px;font-weight:800;color:#fff;line-height:1.25}
+.brand-sub{display:block;color:var(--gdl);font-size:9.5px;font-weight:700;letter-spacing:2.6px}
+.top-acts{display:flex;gap:10px;align-items:center}
 
-.demo-bar{position:fixed;bottom:16px;right:16px;z-index:99999;display:flex;gap:6px;background:var(--nvdd);border:1px solid rgba(217,191,142,.3);border-radius:100px;padding:6px 8px;box-shadow:var(--sh-3)}
-.demo-bar button{border:none;background:transparent;color:rgba(255,255,255,.55);font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;padding:7px 14px;border-radius:100px;cursor:pointer;transition:color .3s var(--ease)}
-.demo-bar button:hover{color:#fff}
-.demo-bar button.on{background:linear-gradient(120deg,var(--gd),var(--gdl));color:var(--nvd)}
-
-.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--nvd);color:var(--gdl);padding:11px 26px;border-radius:100px;font-size:12.5px;font-weight:500;opacity:0;transition:opacity .3s var(--ease),transform .3s var(--ease);z-index:99998;pointer-events:none;box-shadow:var(--sh-3);white-space:nowrap;max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
+/* الأزرار — حبّة دواء دائماً */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 26px;border-radius:100px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:800;text-decoration:none;cursor:pointer;border:none;transition:transform .3s var(--ease),box-shadow .3s var(--ease),background .3s var(--ease),border-color .3s var(--ease),color .3s var(--ease)}
 .btn .arr{display:inline-block;transition:transform .3s var(--ease)}
 .btn:hover .arr{transform:translateX(-4px)}
@@ -60,20 +56,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
 .btn-out-light{background:transparent;color:var(--nv);border:1px solid rgba(27,58,75,.16)}
 .btn-out-light:hover{background:var(--nv);color:var(--gdl);border-color:var(--nv)}
 
-.scale-svg path,.scale-svg line,.scale-svg circle{stroke:url(#gGold);stroke-width:1.4;fill:none;stroke-linecap:round}
-.scale-gdl path,.scale-gdl line,.scale-gdl circle{stroke:var(--gdl);stroke-width:1.4;fill:none;stroke-linecap:round}
-
-
-/* Production overrides */
-.toast{bottom:24px}
-.brand-logo{width:46px;height:46px;object-fit:contain;display:block}
-
-/* ═══════════ 1) الصفحة التسويقية ═══════════ */
-.hero{position:relative;color:#fff;overflow:hidden;background:var(--hero-grad);padding-bottom:128px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:22px 0}
-.brand{display:flex;align-items:center;gap:13px}
-.brand-name{font-family:'Cairo',sans-serif;font-size:17px;font-weight:800;color:#fff;line-height:1.25}
-.brand-sub{display:block;color:var(--gdl);font-size:9.5px;font-weight:700;letter-spacing:2.6px}
 .hero-in{position:relative;z-index:2;padding-top:52px;max-width:640px}
 .eyebrow{display:inline-flex;align-items:center;gap:12px;color:var(--gdl);font-size:12.5px;font-weight:700;letter-spacing:.6px;margin-bottom:20px}
 .eyebrow::before,.eyebrow::after{content:'';width:26px;height:1px;background:linear-gradient(90deg,transparent,var(--gd))}
@@ -83,8 +65,12 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
 .hero-lead{font-weight:300;font-size:clamp(14.5px,1.6vw,16.5px);color:rgba(255,255,255,.72);line-height:2.05;margin-bottom:30px;max-width:560px}
 .hero-lead b{font-weight:700;color:#fff}
 .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
-.scale-mark{position:absolute;left:4%;top:50%;transform:translateY(-52%);width:min(330px,26vw);opacity:.4;pointer-events:none;z-index:1}
 
+/* الميزان — العلامة المائية */
+.scale-mark{position:absolute;left:4%;top:50%;transform:translateY(-52%);width:min(330px,26vw);opacity:.4;pointer-events:none;z-index:1}
+.scale-mark path,.scale-mark line,.scale-mark circle{stroke:url(#gGold);stroke-width:1.4;fill:none;stroke-linecap:round}
+
+/* ============ الشريط العائم ============ */
 .strip{position:relative;z-index:10;margin-top:-64px}
 .strip-card{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--sh-3);display:grid;grid-template-columns:repeat(4,1fr)}
 .strip-it{display:flex;align-items:flex-start;gap:13px;padding:24px 22px;position:relative}
@@ -94,6 +80,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
 .strip-it h3{font-family:'Cairo',sans-serif;font-size:14px;font-weight:800;color:var(--nv);line-height:1.55}
 .strip-it p{font-size:12px;color:var(--t2);line-height:1.8;margin-top:2px}
 
+/* ============ الأقسام ============ */
 .sec{padding:105px 0 0}
 .sec-head{text-align:center;max-width:680px;margin:0 auto 52px}
 .kicker{display:inline-flex;align-items:center;gap:12px;color:var(--gdd);font-size:12.5px;font-weight:800;letter-spacing:.8px;margin-bottom:14px}
@@ -103,6 +90,15 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
 .sec-head p{color:var(--t2);font-size:15px;line-height:2}
 .sec-head p b{color:var(--nv)}
 
+/* كيف تعمل */
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.how-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px 26px;box-shadow:var(--sh-1);transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease);text-align:center}
+.how-card:hover{transform:translateY(-5px);border-color:var(--line-gold);box-shadow:var(--sh-2)}
+.how-n{width:46px;height:46px;border-radius:14px;background:rgba(27,58,75,.05);border:1px solid var(--line);color:var(--nv);font-family:'Cairo',sans-serif;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.how-card h3{font-family:'Cairo',sans-serif;font-size:16.5px;font-weight:800;color:var(--nv);margin-bottom:7px}
+.how-card p{font-size:13px;color:var(--t2);line-height:1.95}
+
+/* الباقات */
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
 .plan{background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px 28px;box-shadow:var(--sh-1);display:flex;flex-direction:column;position:relative;transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease)}
 .plan:hover{transform:translateY(-5px);border-color:var(--line-gold);box-shadow:var(--sh-2)}
@@ -120,7 +116,15 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
 .plan .btn{width:100%}
 .plans-note{text-align:center;font-size:12.5px;color:var(--tm);margin-top:22px;line-height:2}
 
-.dark-sec{margin-top:105px;color:#fff;position:relative;overflow:hidden;background:var(--hero-grad);padding:88px 0}
+/* ============ القسم الداكن — طلب الانضمام ============ */
+.dark-sec{
+  margin-top:105px;color:#fff;position:relative;overflow:hidden;
+  background:
+    radial-gradient(700px 380px at 92% 2%, rgba(201,169,110,.14), transparent 55%),
+    radial-gradient(1100px 500px at 85% -10%, rgba(61,123,138,.22), transparent 60%),
+    linear-gradient(165deg, var(--nvd) 0%, var(--nv) 60%, var(--nvl) 100%);
+  padding:88px 0;
+}
 .join-in{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;position:relative;z-index:2}
 .join-txt .kicker{color:var(--gdl)}
 .join-txt h2{font-family:'Cairo',sans-serif;font-size:clamp(23px,2.8vw,32px);font-weight:900;line-height:1.55;letter-spacing:-.5px;margin-bottom:14px}
@@ -137,22 +141,25 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
 .jf input:focus,.jf select:focus{border-color:rgba(201,169,110,.6);box-shadow:0 0 0 4px rgba(201,169,110,.13)}
 .join-note{font-size:11px;color:rgba(255,255,255,.38);line-height:1.9;margin-top:12px;text-align:center;font-weight:300}
 .dark-scale{position:absolute;left:-30px;bottom:-40px;width:300px;opacity:.13;pointer-events:none}
+.dark-scale path,.dark-scale line,.dark-scale circle{stroke:var(--gdl);stroke-width:1.4;fill:none;stroke-linecap:round}
 
+/* ============ CTA الختامي ============ */
 .cta-final{padding:105px 0;text-align:center}
 .cta-final h2{font-family:'Cairo',sans-serif;font-size:clamp(23px,2.9vw,33px);font-weight:900;color:var(--nv);line-height:1.55;letter-spacing:-.5px;margin-bottom:12px}
 .cta-final p{color:var(--t2);font-size:15px;line-height:2;max-width:560px;margin:0 auto 28px}
-.foot{background:var(--nvdd);color:rgba(255,255,255,.55);padding:34px 0;text-align:center;font-size:12.5px;line-height:2.1;font-weight:300}
-.foot a{color:var(--gdl);text-decoration:none;font-weight:500;cursor:pointer}
+.cta-final .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
+/* ============ الفوتر ============ */
+.foot{background:var(--nvdd);color:rgba(255,255,255,.55);padding:34px 0;text-align:center;font-size:12.5px;line-height:2.1;font-weight:300}
+.foot a{color:var(--gdl);text-decoration:none;font-weight:500}
+
+/* ============ الحركة والتجاوب ============ */
 .rev{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .rev.in{opacity:1;transform:none}
-
-
 @media(max-width:1024px){
   .strip-card{grid-template-columns:repeat(2,1fr)}
   .strip-it:nth-child(3)::before{display:none}
   .strip-it:nth-child(n+3){border-top:1px solid var(--line)}
-  .qgrid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:720px){
   .sec{padding:70px 0 0}
@@ -165,127 +172,224 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
   .strip-card{grid-template-columns:1fr}
   .strip-it::before{display:none!important}
   .strip-it+.strip-it{border-top:1px solid var(--line)}
-  .plans{grid-template-columns:1fr}
+  .how,.plans{grid-template-columns:1fr}
   .plan.featured{order:-1}
   .join-in{grid-template-columns:1fr;gap:34px}
   .dark-sec{margin-top:70px;padding:64px 0}
   .cta-final{padding:70px 0}
+  .cta-final .row .btn{width:100%}
   .top-acts .btn{padding:11px 18px;font-size:13px}
-  .login-scale{left:auto;right:-40px;top:4%;bottom:auto;width:140px;opacity:.1}
-  .lcard{padding:30px 22px}
-  .side{transform:translateX(100%)}
-  .side.open{transform:translateX(0);box-shadow:-16px 0 44px rgba(0,0,0,.3)}
-  .sb-close{display:flex}
-  .mn{margin-right:0}
-  .tpmenu{display:flex}
-  .pc{padding:20px 16px 46px}
-  .tp-entity .tn{display:none}
-  .qgrid{grid-template-columns:1fr 1fr;gap:10px}
-  .svc-grid{grid-template-columns:1fr}
-  .mgr-acts{width:100%}
-  .mgr-btn{flex:1;justify-content:center}
-  .mdl{padding:0;align-items:flex-end}
-  .mdlb{max-width:100%;max-height:92dvh;border-radius:24px 24px 0 0;animation:mUp .4s var(--ease)}
-  @keyframes mUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
-  .rev,.fu,.sp-hello,.sp-entity,.sp-sub,.sp-seal,.sp-bar{opacity:1!important;transform:none!important}
-  .sp-scale path,.sp-scale line,.sp-scale circle{stroke-dashoffset:0!important}
+  .rev{opacity:1;transform:none}
 }
-
-.top-acts{display:flex;align-items:center;gap:10px}
-.brand{text-decoration:none}
-@media(max-width:720px){.topbar{padding:18px 0}.brand-logo{width:42px;height:42px}}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D9BF8E"/><stop offset="1" stop-color="#C9A96E"/></linearGradient></defs></svg>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#D9BF8E"/><stop offset="1" stop-color="#C9A96E"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- الرأس الداكن -->
 <header class="hero">
   <div class="wrap">
     <div class="topbar">
-      <a class="brand" href="index.html">
-        <img class="brand-logo" src="logo.png" alt="أعراف">
+      <a class="brand" href="#">
+        <img src="logo.png" alt="شعار أعراف">
         <div><div class="brand-name">أعراف للأعمال</div><span class="brand-sub">BUSINESS</span></div>
       </a>
-      <div class="top-acts"><a class="btn btn-out-dark" href="login.html">دخول المنشآت</a></div>
+      <div class="top-acts">
+        <a class="btn btn-out-dark" href="login.html">دخول المنشآت</a>
+      </div>
     </div>
+
     <div class="hero-in">
-      <span class="eyebrow">باقات شهرية بتنفيذ فريق قانوني مختص</span>
+      <span class="eyebrow">باقات شهرية بتنفيذ محامين مرخصين</span>
       <h1>حماية قانونية مستمرة لمنشأتك<br>باشتراك <em>شهري واحد</em></h1>
-      <p class="hero-lead">بدلاً من البحث عن مختص عند كل عقد وكل خطاب، تمنح <b>أعراف للأعمال</b> منشأتكم فريقاً قانونياً جاهزاً طوال الشهر — عقودكم وخطاباتكم ومذكراتكم وإجراءاتكم في ناجز، ضمن باقة واضحة بسعر ثابت.</p>
+      <p class="hero-lead">بدلاً من البحث عن محامٍ عند كل عقد وكل خطاب، تمنح <b>أعراف للأعمال</b> منشأتكم فريقاً قانونياً جاهزاً طوال الشهر — عقودكم وخطاباتكم ومذكراتكم وإجراءاتكم في ناجز، ضمن باقة واضحة بسعر ثابت.</p>
       <div class="hero-cta">
         <a class="btn btn-gold" href="#join">تحدث مع مستشار <span class="arr">←</span></a>
-        <a class="btn btn-out-dark" href="#plansSec">قارن الباقات</a>
+        <a class="btn btn-out-dark" href="#plans">قارن الباقات</a>
       </div>
     </div>
   </div>
-  <svg class="scale-mark scale-svg" viewBox="0 0 200 220" aria-hidden="true">
-    <line x1="100" y1="18" x2="100" y2="178"/><line x1="34" y1="48" x2="166" y2="48"/><circle cx="100" cy="14" r="5"/>
-    <line x1="34" y1="48" x2="16" y2="102"/><line x1="34" y1="48" x2="52" y2="102"/><path d="M10 102 a24 14 0 0 0 48 0"/>
-    <line x1="166" y1="48" x2="148" y2="102"/><line x1="166" y1="48" x2="184" y2="102"/><path d="M142 102 a24 14 0 0 0 48 0"/>
-    <line x1="64" y1="192" x2="136" y2="192"/><line x1="78" y1="178" x2="122" y2="178"/>
+
+  <!-- الميزان — العلامة المائية -->
+  <svg class="scale-mark" viewBox="0 0 200 220" aria-hidden="true">
+    <line x1="100" y1="18" x2="100" y2="178"/>
+    <line x1="34" y1="48" x2="166" y2="48"/>
+    <circle cx="100" cy="14" r="5"/>
+    <line x1="34" y1="48" x2="16" y2="102"/><line x1="34" y1="48" x2="52" y2="102"/>
+    <path d="M10 102 a24 14 0 0 0 48 0"/>
+    <line x1="166" y1="48" x2="148" y2="102"/><line x1="166" y1="48" x2="184" y2="102"/>
+    <path d="M142 102 a24 14 0 0 0 48 0"/>
+    <line x1="64" y1="192" x2="136" y2="192"/>
+    <line x1="78" y1="178" x2="122" y2="178"/>
   </svg>
 </header>
 
-<div class="strip wrap"><div class="strip-card">
-  <div class="strip-it"><div class="s-ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h3>تنفيذ بشري متخصص</h3><p>خدمات قانونية يقدمها فريق مختص لمنشأتكم</p></div></div>
-  <div class="strip-it"><div class="s-ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><h3>سرية تعاقدية</h3><p>تعامل مهني صارم مع بيانات منشأتكم</p></div></div>
-  <div class="strip-it"><div class="s-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><h3>وضوح في التنفيذ</h3><p>رصيد وخدمات محددة بوضوح لكل باقة</p></div></div>
-  <div class="strip-it"><div class="s-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div><div><h3>مسؤول مخصص</h3><p>مسؤول قانوني مخصص للتواصل مع منشأتكم</p></div></div>
-</div></div>
-
-<section class="sec wrap" id="plansSec">
-  <div class="sec-head rev"><span class="kicker">الباقات الشهرية</span><h2>باقة لكل مرحلة من نمو منشأتكم</h2><p>أسماؤنا من معجمنا القانوني: <b>سند</b> يحفظ حقكم، <b>عماد</b> يرفع بنيانكم، و<b>ديوان</b> يدير شؤونكم.</p></div>
-  <div class="plans">
-    <div class="plan rev"><h3>باقة سند</h3><div class="tag">الغطاء القانوني الأساسي للمنشآت الناشئة والمؤسسات الفردية</div><div class="price">1,500 <small>ر.س / شهرياً</small></div><div class="cyc">يتجدد الرصيد مطلع كل دورة شهرية</div><ul>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>5</b> استشارات قانونية هاتفية أو مرئية</span></li>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>2</b> مراجعة أو صياغة عقود</span></li>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>2</b> خطابات + <b>2</b> خدمات ناجز</span></li>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>الرد خلال يوم عمل واحد</span></li>
-    </ul><a class="btn btn-out-light" href="#join" onclick="pickPlan('باقة سند')">أطلب باقة سند</a></div>
-    <div class="plan featured rev"><span class="plan-flag">الأنسب للشركات النامية</span><h3>باقة عماد</h3><div class="tag">الركيزة القانونية الشهرية للشركات النامية ذات النشاط المستمر</div><div class="price">3,500 <small>ر.س / شهرياً</small></div><div class="cyc">يتجدد الرصيد مطلع كل دورة شهرية</div><ul>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>12</b> استشارة قانونية</span></li>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>5</b> عقود + <b>5</b> خطابات + <b>5</b> ناجز</span></li>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>مذكرة قانونية</b> شهرياً</span></li>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>مدير حساب مخصص وأولوية تنفيذ</span></li>
-    </ul><a class="btn btn-gold" href="#join" onclick="pickPlan('باقة عماد')">أطلب باقة عماد <span class="arr">←</span></a></div>
-    <div class="plan rev"><h3>باقة ديوان</h3><div class="tag">إدارة قانونية متكاملة — كأن لدى منشأتكم ديوان محاماة داخلي</div><div class="price">7,500 <small>ر.س / شهرياً</small></div><div class="cyc">يتجدد الرصيد مطلع كل دورة شهرية</div><ul>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>استشارات وخطابات <b>بلا حدود</b></span></li>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>12</b> عقداً + <b>3</b> مذكرات + <b>10</b> ناجز</span></li>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>محامٍ مخصص + اجتماع شهري</span></li>
-      <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>خصم <b>20%</b> على التوكيل والترافع</span></li>
-    </ul><a class="btn btn-out-light" href="#join" onclick="pickPlan('باقة ديوان')">أطلب باقة ديوان</a></div>
+<!-- الشريط العائم -->
+<div class="strip wrap">
+  <div class="strip-card">
+    <div class="strip-it">
+      <div class="s-ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div><h3>محامون مرخصون</h3><p>تنفيذ بشري كامل بترخيص وزارة العدل</p></div>
+    </div>
+    <div class="strip-it">
+      <div class="s-ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div><h3>سرية تعاقدية</h3><p>تعامل مهني صارم مع بيانات منشأتكم</p></div>
+    </div>
+    <div class="strip-it">
+      <div class="s-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <div><h3>التزام بالمواعيد</h3><p>اتفاقية مستوى خدمة واضحة لكل باقة</p></div>
+    </div>
+    <div class="strip-it">
+      <div class="s-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+      <div><h3>مسؤول مخصص</h3><p>محامٍ موكّل باسم منشأتكم للتواصل المباشر</p></div>
+    </div>
   </div>
-  <p class="plans-note">الأسعار لا تشمل ضريبة القيمة المضافة • الخدمات خارج الرصيد تُسعّر بشفافية قبل التنفيذ</p>
+</div>
+
+<!-- كيف تعمل -->
+<section class="sec wrap">
+  <div class="sec-head rev">
+    <span class="kicker">كيف تعمل المنصة</span>
+    <h2>ثلاث خطوات وتبدأ منشأتكم</h2>
+  </div>
+  <div class="how">
+    <div class="how-card rev"><div class="how-n">١</div><h3>اطلبوا الانضمام</h3><p>املؤوا نموذج الانضمام، ويتواصل معكم فريق أعراف خلال يوم عمل لاختيار الباقة المناسبة.</p></div>
+    <div class="how-card rev"><div class="how-n">٢</div><h3>نفعّل بوابتكم</h3><p>نُنشئ حساب منشأتكم ونسلّمكم رمز الدخول والرقم السري — بوابة خاصة باسم كيانكم.</p></div>
+    <div class="how-card rev"><div class="how-n">٣</div><h3>اطلبوا واطمئنوا</h3><p>ترسلون طلباتكم من البوابة، ويتولى محامونا التنفيذ ضمن رصيد باقتكم الشهري.</p></div>
+  </div>
 </section>
 
+<!-- الباقات -->
+<section class="sec wrap" id="plans">
+  <div class="sec-head rev">
+    <span class="kicker">الباقات الشهرية</span>
+    <h2>باقة لكل مرحلة من نمو منشأتكم</h2>
+    <p>أسماؤنا من معجمنا القانوني: <b>سند</b> يحفظ حقكم، <b>عماد</b> يرفع بنيانكم، و<b>ديوان</b> يدير شؤونكم.</p>
+  </div>
+  <div class="plans">
+
+    <div class="plan rev">
+      <h3>باقة سند</h3>
+      <div class="tag">الغطاء القانوني الأساسي للمنشآت الناشئة والمؤسسات الفردية</div>
+      <div class="price">1,500 <small>ر.س / شهرياً</small></div>
+      <div class="cyc">يتجدد الرصيد مطلع كل دورة شهرية</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>5</b> استشارات قانونية هاتفية أو مرئية</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>2</b> مراجعة أو صياغة عقود</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>2</b> خطابات رسمية + <b>2</b> خدمات ناجز</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>الرد خلال يوم عمل واحد</span></li>
+      </ul>
+      <a class="btn btn-out-light" href="#join" onclick="pickPlan('باقة سند')">أطلب باقة سند</a>
+    </div>
+
+    <div class="plan featured rev">
+      <span class="plan-flag">الأنسب للشركات النامية</span>
+      <h3>باقة عماد</h3>
+      <div class="tag">الركيزة القانونية الشهرية للشركات النامية ذات النشاط المستمر</div>
+      <div class="price">3,500 <small>ر.س / شهرياً</small></div>
+      <div class="cyc">يتجدد الرصيد مطلع كل دورة شهرية</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>12</b> استشارة قانونية</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>5</b> عقود + <b>5</b> خطابات + <b>5</b> خدمات ناجز</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>مذكرة قانونية</b> شهرياً</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>مدير حساب قانوني مخصص وأولوية تنفيذ</span></li>
+      </ul>
+      <a class="btn btn-gold" href="#join" onclick="pickPlan('باقة عماد')">أطلب باقة عماد <span class="arr">←</span></a>
+    </div>
+
+    <div class="plan rev">
+      <h3>باقة ديوان</h3>
+      <div class="tag">إدارة قانونية متكاملة — كأن لدى منشأتكم ديوان محاماة داخلي</div>
+      <div class="price">7,500 <small>ر.س / شهرياً</small></div>
+      <div class="cyc">يتجدد الرصيد مطلع كل دورة شهرية</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>استشارات وخطابات <b>بلا حدود</b></span></li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>12</b> عقداً + <b>3</b> مذكرات + <b>10</b> خدمات ناجز</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>محامٍ مخصص + اجتماع شهري لمراجعة الموقف القانوني</span></li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>خصم <b>20%</b> على التوكيل والترافع</span></li>
+      </ul>
+      <a class="btn btn-out-light" href="#join" onclick="pickPlan('باقة ديوان')">أطلب باقة ديوان</a>
+    </div>
+
+  </div>
+  <p class="plans-note">الأسعار لا تشمل ضريبة القيمة المضافة • الخدمات خارج الرصيد تُسعّر بشفافية قبل التنفيذ • يمكن تخصيص باقة خاصة للكيانات الكبرى</p>
+</section>
+
+<!-- القسم الداكن — طلب الانضمام -->
 <section class="dark-sec" id="join">
   <div class="wrap join-in">
-    <div class="join-txt rev"><span class="kicker">طلب الانضمام</span><h2>تفعيل بعناية شخصية<br><em>لا تسجيل آلي</em></h2><p>يدرس فريق أعراف طلب منشأتكم، ويتواصل معكم لفهم احتياجكم القانوني قبل تسليمكم مفاتيح بوابتكم.</p>
-      <div class="join-step"><span class="n">١</span>ترسلون النموذج عبر واتساب بضغطة واحدة</div><div class="join-step"><span class="n">٢</span>نتواصل معكم خلال يوم عمل</div><div class="join-step"><span class="n">٣</span>تستلمون رمز المنشأة والرقم السري</div>
+    <div class="join-txt rev">
+      <span class="kicker">طلب الانضمام</span>
+      <h2>تفعيل بعناية شخصية<br><em>لا تسجيل آلي</em></h2>
+      <p>يدرس فريق أعراف طلب منشأتكم، ويتواصل معكم لفهم احتياجكم القانوني قبل تسليمكم مفاتيح بوابتكم.</p>
+      <div class="join-step"><span class="n">١</span>ترسلون النموذج عبر واتساب بضغطة واحدة</div>
+      <div class="join-step"><span class="n">٢</span>نتواصل معكم خلال يوم عمل</div>
+      <div class="join-step"><span class="n">٣</span>تستلمون رمز المنشأة والرقم السري</div>
     </div>
-    <div class="join-form rev"><div class="jf"><label for="jName">اسم المنشأة</label><input id="jName" placeholder="مثال: شركة النخبة للتجارة"></div><div class="jf"><label for="jType">نوع الكيان</label><select id="jType"><option>شركة</option><option>مؤسسة</option><option>جمعية / كيان غير ربحي</option></select></div><div class="jf"><label for="jContact">اسم المسؤول ورقم جواله</label><input id="jContact" placeholder="الاسم — 05xxxxxxxx"></div><div class="jf"><label for="jPlan">الباقة المبدئية</label><select id="jPlan"><option>باقة عماد</option><option>باقة سند</option><option>باقة ديوان</option><option>لست متأكداً — أريد استشارتكم</option></select></div><button class="btn btn-gold" style="width:100%" onclick="sendJoin()">إرسال طلب الانضمام <span class="arr">←</span></button><div class="join-note">يفتح الطلب في واتساب فريق أعراف — لا يُنشأ أي حساب قبل تواصلنا معكم</div></div>
+    <div class="join-form rev">
+      <div class="jf"><label for="jName">اسم المنشأة</label><input id="jName" placeholder="مثال: شركة النخبة للتجارة"></div>
+      <div class="jf"><label for="jType">نوع الكيان</label><select id="jType"><option>شركة</option><option>مؤسسة</option><option>جمعية / كيان غير ربحي</option></select></div>
+      <div class="jf"><label for="jContact">اسم المسؤول ورقم جواله</label><input id="jContact" placeholder="الاسم — 05xxxxxxxx"></div>
+      <div class="jf"><label for="jPlan">الباقة المبدئية</label><select id="jPlan"><option>باقة عماد</option><option>باقة سند</option><option>باقة ديوان</option><option>لست متأكداً — أريد استشارتكم</option></select></div>
+      <button class="btn btn-gold" style="width:100%" onclick="sendJoin()">إرسال طلب الانضمام <span class="arr">←</span></button>
+      <div class="join-note">يفتح الطلب في واتساب فريق أعراف — لا يُنشأ أي حساب قبل تواصلنا معكم</div>
+    </div>
   </div>
-  <svg class="dark-scale scale-gdl" viewBox="0 0 200 220" aria-hidden="true"><line x1="100" y1="18" x2="100" y2="178"/><line x1="34" y1="48" x2="166" y2="48"/><circle cx="100" cy="14" r="5"/><line x1="34" y1="48" x2="16" y2="102"/><line x1="34" y1="48" x2="52" y2="102"/><path d="M10 102 a24 14 0 0 0 48 0"/><line x1="166" y1="48" x2="148" y2="102"/><line x1="166" y1="48" x2="184" y2="102"/><path d="M142 102 a24 14 0 0 0 48 0"/><line x1="64" y1="192" x2="136" y2="192"/></svg>
+  <svg class="dark-scale" viewBox="0 0 200 220" aria-hidden="true">
+    <line x1="100" y1="18" x2="100" y2="178"/>
+    <line x1="34" y1="48" x2="166" y2="48"/>
+    <circle cx="100" cy="14" r="5"/>
+    <line x1="34" y1="48" x2="16" y2="102"/><line x1="34" y1="48" x2="52" y2="102"/>
+    <path d="M10 102 a24 14 0 0 0 48 0"/>
+    <line x1="166" y1="48" x2="148" y2="102"/><line x1="166" y1="48" x2="184" y2="102"/>
+    <path d="M142 102 a24 14 0 0 0 48 0"/>
+    <line x1="64" y1="192" x2="136" y2="192"/>
+  </svg>
 </section>
 
-<section class="cta-final wrap"><div class="rev"><h2>منشأتكم مشتركة بالفعل؟</h2><p>ادخلوا إلى بوابتكم برمز المنشأة والرقم السري، وتابعوا رصيد باقتكم وأرسلوا طلباتكم القانونية.</p><a class="btn btn-navy" href="login.html">دخول بوابة المنشآت <span class="arr">←</span></a></div></section>
-<footer class="foot"><div class="wrap">شركة أعراف للمحاماة والاستشارات القانونية © 2026 — جميع الحقوق محفوظة<br><a href="login.html">دخول المنشآت</a> • <a href="terms.html">الشروط والأحكام</a></div></footer>
-<div class="toast" id="T"></div>
+<!-- CTA الختامي -->
+<section class="cta-final wrap">
+  <div class="rev">
+    <h2>منشأتكم مشتركة بالفعل؟</h2>
+    <p>ادخلوا إلى بوابتكم برمز المنشأة والرقم السري، وتابعوا رصيد باقتكم وأرسلوا طلباتكم القانونية.</p>
+    <div class="row">
+      <a class="btn btn-navy" href="login.html">دخول بوابة المنشآت <span class="arr">←</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- الفوتر -->
+<footer class="foot">
+  <div class="wrap">
+    شركة أعراف للمحاماة والاستشارات القانونية © 2026 — جميع الحقوق محفوظة<br>
+    <a href="login.html">دخول المنشآت</a> • <a href="terms.html">الشروط والأحكام</a>
+  </div>
+</footer>
+
 <script src="accounts.js"></script>
 <script>
 function $(id){return document.getElementById(id)}
-function toast(m){var t=$('T');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2400)}
 function pickPlan(p){var s=$('jPlan');for(var i=0;i<s.options.length;i++)if(s.options[i].text===p)s.selectedIndex=i}
 function sendJoin(){
   var n=$('jName').value.trim(),c=$('jContact').value.trim();
-  if(!n){toast('يرجى كتابة اسم المنشأة');$('jName').focus();return}
-  if(!c){toast('يرجى كتابة اسم المسؤول ورقم الجوال');$('jContact').focus();return}
-  var msg='طلب انضمام — أعراف للأعمال\n'+'المنشأة: '+n+'\n'+'نوع الكيان: '+$('jType').value+'\n'+'المسؤول: '+c+'\n'+'الباقة المبدئية: '+$('jPlan').value;
-  toast('جارٍ فتح واتساب فريق أعراف');
-  setTimeout(function(){open('https://wa.me/'+(window.ARAF_BIZ_WHATSAPP||'')+'?text='+encodeURIComponent(msg),'_blank')},450);
+  if(!n){$('jName').focus();return}
+  if(!c){$('jContact').focus();return}
+  var msg='طلب انضمام — أعراف للأعمال\n'
+    +'المنشأة: '+n+'\n'
+    +'نوع الكيان: '+$('jType').value+'\n'
+    +'المسؤول: '+c+'\n'
+    +'الباقة المبدئية: '+$('jPlan').value;
+  open('https://wa.me/'+(window.ARAF_BIZ_WHATSAPP||'')+'?text='+encodeURIComponent(msg),'_blank');
 }
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
 document.querySelectorAll('.rev').forEach(function(el){io.observe(el)});
