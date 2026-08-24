@@ -126,5 +126,12 @@ window.ARAF_BIZ_ACCOUNTS = [
   }
 ];
 
-/* رقم واتساب فريق أعراف لاستقبال طلبات الخدمات وطلبات الانضمام (بدون +) */
-window.ARAF_BIZ_WHATSAPP = '9665XXXXXXXX';
+/* رقم واتساب فريق أعراف للاستشارات وطلبات الانضمام (بدون +) */
+window.ARAF_BIZ_WHATSAPP = '966506472325';
+
+/*
+   رابط استقبال طلبات البوابة في الداش بورد.
+   عند إنشاء Supabase Edge Function أو API للداش بورد، ضع الرابط هنا.
+   لا تضع مفتاح service_role أو أي سر داخل ملفات الواجهة العامة.
+*/
+window.ARAF_BIZ_REQUESTS_ENDPOINT = '';

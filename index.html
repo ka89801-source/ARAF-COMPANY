@@ -214,7 +214,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
       <h1>حماية قانونية مستمرة لمنشأتك<br>باشتراك <em>شهري واحد</em></h1>
       <p class="hero-lead">بدلاً من البحث عن محامٍ عند كل عقد وكل خطاب، تمنح <b>أعراف للأعمال</b> منشأتكم فريقاً قانونياً جاهزاً طوال الشهر — عقودكم وخطاباتكم ومذكراتكم وإجراءاتكم في ناجز، ضمن باقة واضحة بسعر ثابت.</p>
       <div class="hero-cta">
-        <a class="btn btn-gold" href="#join">تحدث مع مستشار <span class="arr">←</span></a>
+        <a class="btn btn-gold" id="consultantBtn" href="#" target="_blank" rel="noopener">تحدث مع مستشار <span class="arr">←</span></a>
         <a class="btn btn-out-dark" href="#plans">قارن الباقات</a>
       </div>
     </div>
@@ -379,6 +379,9 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
 <script src="accounts.js"></script>
 <script>
 function $(id){return document.getElementById(id)}
+function waUrl(message){return'https://wa.me/'+(window.ARAF_BIZ_WHATSAPP||'')+'?text='+encodeURIComponent(message)}
+var consultantBtn=$('consultantBtn');
+if(consultantBtn)consultantBtn.href=waUrl('السلام عليكم، أرغب بالتحدث مع مستشار بخصوص أعراف للأعمال.');
 function pickPlan(p){var s=$('jPlan');for(var i=0;i<s.options.length;i++)if(s.options[i].text===p)s.selectedIndex=i}
 function sendJoin(){
   var n=$('jName').value.trim(),c=$('jContact').value.trim();
@@ -389,7 +392,7 @@ function sendJoin(){
     +'نوع الكيان: '+$('jType').value+'\n'
     +'المسؤول: '+c+'\n'
     +'الباقة المبدئية: '+$('jPlan').value;
-  open('https://wa.me/'+(window.ARAF_BIZ_WHATSAPP||'')+'?text='+encodeURIComponent(msg),'_blank');
+  open(waUrl(msg),'_blank');
 }
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
 document.querySelectorAll('.rev').forEach(function(el){io.observe(el)});

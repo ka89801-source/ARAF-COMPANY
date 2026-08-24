@@ -198,13 +198,18 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);min-h
 .req-empty p{font-size:13px;line-height:2}
 .req-empty button{margin-top:16px;padding:12px 28px;border-radius:100px;border:none;background:var(--nv);color:var(--gdl);font-family:'Cairo',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:background .3s var(--ease),transform .3s var(--ease)}
 .req-empty button:hover{background:var(--nvl);transform:translateY(-2px)}
-.req-item{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:11px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:var(--sh-1)}
+.req-item{background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px 18px;margin-bottom:11px;box-shadow:var(--sh-1)}
+.req-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .req-ic{width:40px;height:40px;border-radius:13px;background:rgba(201,169,110,.1);border:1px solid var(--line-gold);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .req-ic svg{width:17px;height:17px;stroke:var(--gdd);stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .req-body{flex:1;min-width:180px}
 .req-body h4{font-family:'Cairo',sans-serif;font-size:13.5px;font-weight:800;color:var(--nv)}
 .req-body span{font-size:11px;color:var(--tm)}
 .req-st{font-size:10.5px;font-weight:700;padding:5px 14px;border-radius:100px;border:1px solid var(--line-gold);color:var(--gdd)}
+.req-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.req-detail{font-size:11.5px;color:var(--t2);line-height:1.85;min-width:0}
+.req-detail b{display:block;font-size:10px;color:var(--tm);font-weight:500;margin-bottom:2px}
+.req-desc{grid-column:1/-1;background:rgba(27,58,75,.025);border-radius:12px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere}
 
 /* صفحة الباقة */
 .plan-hero{
@@ -249,6 +254,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);min-h
 .bs:hover{background:var(--nv);color:var(--gdl);border-color:var(--nv)}
 .bp{flex:2;padding:12px;border-radius:100px;border:none;background:linear-gradient(120deg,var(--gd),var(--gdl));color:var(--nvd);font-family:'Cairo',sans-serif;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:0 10px 30px rgba(201,169,110,.28);transition:transform .3s var(--ease);display:flex;align-items:center;justify-content:center;gap:8px}
 .bp:hover{transform:translateY(-2px)}
+.bp:disabled{opacity:.65;cursor:wait;transform:none}
 .bp svg{width:14px;height:14px;stroke:var(--nvd);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--nvd);color:var(--gdl);padding:11px 26px;border-radius:100px;font-size:12.5px;font-weight:500;opacity:0;transition:opacity .3s var(--ease),transform .3s var(--ease);z-index:9999;pointer-events:none;box-shadow:var(--sh-3);white-space:nowrap;max-width:calc(100vw - 40px);overflow:hidden;text-overflow:ellipsis}
@@ -270,6 +276,8 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);min-h
   .svc-grid{grid-template-columns:1fr}
   .mgr-acts{width:100%}
   .mgr-btn{flex:1;justify-content:center}
+  .req-details{grid-template-columns:1fr}
+  .req-desc{grid-column:auto}
   .mdl{padding:0;align-items:flex-end}
   .mdlb{max-width:100%;max-height:92dvh;border-radius:24px 24px 0 0;animation:mUp .4s var(--ease)}
   @keyframes mUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
@@ -495,12 +503,45 @@ var SVC=[
 ];
 function svcByKey(k){return SVC.find(function(s){return s.k===k})}
 
-/* ---------- سجل الطلبات المحلي ---------- */
+/* ---------- سجل الطلبات وربط الداش بورد ---------- */
 function reqKey(){return'araf_biz_requests_'+ACC.code}
 function getReqs(){try{return JSON.parse(localStorage.getItem(reqKey())||'[]')}catch(e){return[]}}
-function saveReq(r){var l=getReqs();l.unshift(r);localStorage.setItem(reqKey(),JSON.stringify(l.slice(0,60)));syncReqCount()}
+function setReqs(l){localStorage.setItem(reqKey(),JSON.stringify(l.slice(0,60)));syncReqCount()}
+function saveReq(r){var l=getReqs();l.unshift(r);setReqs(l)}
+function updateReq(id,patch){
+  var l=getReqs().map(function(r){
+    if(r.id!==id)return r;
+    Object.keys(patch).forEach(function(k){r[k]=patch[k]});
+    return r;
+  });
+  setReqs(l);
+}
 function syncReqCount(){$('reqCount').textContent=getReqs().length}
+function dashboardEndpoint(){return String(window.ARAF_BIZ_REQUESTS_ENDPOINT||'').trim()}
+function sendToDashboard(r){
+  var endpoint=dashboardEndpoint();
+  if(!endpoint)return Promise.resolve(false);
+  updateReq(r.id,{delivery:'sending'});
+  return fetch(endpoint,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(r),
+    keepalive:true
+  }).then(function(res){
+    if(!res.ok)throw new Error('dashboard '+res.status);
+    updateReq(r.id,{delivery:'sent',sentAt:new Date().toISOString()});
+    return true;
+  }).catch(function(){
+    updateReq(r.id,{delivery:'pending'});
+    return false;
+  });
+}
+function retryPendingRequests(){
+  if(!dashboardEndpoint())return;
+  getReqs().filter(function(r){return r.delivery!=='sent'&&r.id}).forEach(sendToDashboard);
+}
 syncReqCount();
+window.addEventListener('online',retryPendingRequests);
 
 /* ---------- ملخص الرصيد المصغر ---------- */
 (function mini(){
@@ -612,14 +653,25 @@ function vServices(){
 
 function vRequests(){
   var l=getReqs();
-  var h='<div class="dw fu"><h1>طلبات <em>'+esc(entityShort())+'</em></h1><div class="dwsub">سجل الطلبات المرسلة من هذا الجهاز — يتواصل معكم فريق أعراف لتأكيد كل طلب وتنفيذه.</div></div>';
+  var h='<div class="dw fu"><h1>طلبات <em>'+esc(entityShort())+'</em></h1><div class="dwsub">سجل طلبات منشأتكم وتفاصيلها — يتولى فريق أعراف مراجعتها وتحديث حالتها من لوحة العمل.</div></div>';
   if(!l.length){
     h+='<div class="req-empty fu"><svg viewBox="0 0 24 24"><path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></svg><p>لم ترسلوا أي طلب بعد.<br>ابدؤوا بطلب أول خدمة قانونية لمنشأتكم.</p><button onclick="nav(\'services\')">طلب خدمة الآن</button></div>';
     return h;
   }
   l.forEach(function(r,i){
     var s=svcByKey(r.k)||SVC[SVC.length-1];
-    h+='<div class="req-item fu" style="animation-delay:.'+(i%5)+'s"><div class="req-ic"><svg viewBox="0 0 24 24">'+s.ic+'</svg></div><div class="req-body"><h4>'+esc(r.t)+'</h4><span>'+esc(r.subject)+' — '+new Date(r.ts).toLocaleDateString('ar-SA',{day:'numeric',month:'long',hour:'numeric',minute:'2-digit'})+'</span></div><span class="req-st">قيد المتابعة</span></div>';
+    var when=new Date(r.createdAt||r.ts).toLocaleString('ar-SA',{day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'});
+    var status=r.statusLabel||'جديد';
+    h+='<article class="req-item fu" style="animation-delay:.'+(i%5)+'s">'
+      +'<div class="req-head"><div class="req-ic"><svg viewBox="0 0 24 24">'+s.ic+'</svg></div><div class="req-body"><h4>'+esc(r.subject||r.t)+'</h4><span>'+esc(r.t)+' — '+esc(when)+'</span></div><span class="req-st">'+esc(status)+'</span></div>'
+      +'<div class="req-details">'
+        +'<div class="req-detail"><b>رقم الطلب</b>'+esc(r.id||'طلب سابق')+'</div>'
+        +'<div class="req-detail"><b>الخدمة</b>'+esc(r.t)+'</div>'
+        +'<div class="req-detail"><b>المنشأة</b>'+esc(r.entityName||entityShort())+'</div>'
+        +'<div class="req-detail"><b>الباقة</b>'+esc(r.planName||PLAN.name)+'</div>'
+        +'<div class="req-detail req-desc"><b>تفاصيل الطلب</b>'+esc(r.details||'لم تُضف تفاصيل إضافية لهذا الطلب.')+'</div>'
+      +'</div>'
+    +'</article>';
   });
   return h;
 }
@@ -655,8 +707,8 @@ function openReq(k){
   $('mdlB').innerHTML=
     '<div class="mfg"><label for="rqSub">عنوان الطلب</label><input id="rqSub" placeholder="مثال: مراجعة عقد توريد مع مورد جديد"></div>'+
     '<div class="mfg"><label for="rqDet">تفاصيل الطلب</label><textarea id="rqDet" rows="4" placeholder="اشرحوا الموضوع باختصار — وسيتواصل معكم الفريق لطلب أي مستندات"></textarea></div>'+
-    '<div class="mfg"><label for="rqName">الشخص المسؤول للتواصل</label><input id="rqName" placeholder="الاسم وطريقة التواصل المفضلة"></div>'+
-    '<div class="mnote">يُرسل الطلب باسم <b>'+esc(entityShort())+'</b> (رمز '+ACC.code+') عبر واتساب فريق أعراف مباشرة، ويُخصم من رصيد باقتكم بعد تأكيد التنفيذ.</div>';
+    '<div class="mnote">سيُربط الطلب تلقائياً بمنشأة <b>'+esc(entityShort())+'</b> (رمز '+ACC.code+')، وسيظهر فوراً في «طلبات منشأتي». لا حاجة لإضافة بيانات مسؤول للتواصل.</div>';
+  $('mdlA').disabled=false;
   $('mdlA').innerHTML='<svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>إرسال الطلب';
   $('mdlA').onclick=sendReq;
   $('MDL').classList.add('show');
@@ -666,22 +718,37 @@ function cM(){$('MDL').classList.remove('show')}
 $('MDL').addEventListener('click',function(e){if(e.target===this)cM()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')cM()});
 function sendReq(){
-  var sub=$('rqSub').value.trim(),det=$('rqDet').value.trim(),who=$('rqName').value.trim();
+  var sub=$('rqSub').value.trim(),det=$('rqDet').value.trim();
   if(!sub){toast('يرجى كتابة عنوان الطلب');return}
-  var msg='طلب خدمة — أعراف للأعمال\n'
-    +'المنشأة: '+entityShort()+'\n'
-    +'رمز المنشأة: '+ACC.code+'\n'
-    +'الباقة: '+PLAN.name+'\n'
-    +'الخدمة: '+curSvc.t+'\n'
-    +'العنوان: '+sub+'\n'
-    +(det?('التفاصيل: '+det+'\n'):'')
-    +(who?('المسؤول: '+who):'');
-  saveReq({k:curSvc.k,t:curSvc.t,subject:sub,ts:Date.now()});
+  var now=Date.now();
+  var request={
+    id:'ARB-'+ACC.code.replace(/[^A-Z0-9]/gi,'')+'-'+now.toString(36).toUpperCase(),
+    source:'araf-business-platform',
+    entityCode:ACC.code,
+    entityName:entityShort(),
+    entityType:ACC.type,
+    planKey:ACC.plan,
+    planName:PLAN.name,
+    k:curSvc.k,
+    t:curSvc.t,
+    subject:sub,
+    details:det,
+    status:'new',
+    statusLabel:'جديد',
+    delivery:dashboardEndpoint()?'pending':'local',
+    createdAt:new Date(now).toISOString(),
+    ts:now
+  };
+  $('mdlA').disabled=true;
+  saveReq(request);
   cM();
-  toast('تم تجهيز طلبكم — جارٍ فتح واتساب فريق أعراف');
-  var url='https://wa.me/'+(window.ARAF_BIZ_WHATSAPP||'')+'?text='+encodeURIComponent(msg);
-  setTimeout(function(){open(url,'_blank')},600);
-  if(cP==='requests')rP();
+  nav('requests');
+  toast('تم تسجيل طلبكم في طلبات منشأتكم');
+  sendToDashboard(request).then(function(sent){
+    if(sent)toast('تم إرسال طلبكم إلى فريق أعراف');
+    else if(dashboardEndpoint())toast('تم حفظ الطلب وسيُعاد إرساله عند عودة الاتصال');
+    if(cP==='requests')rP();
+  });
 }
 function askUpgrade(k){
   var p=window.ARAF_PLANS[k];
@@ -696,6 +763,7 @@ function askUpgrade(k){
 
 /* ---------- البداية ---------- */
 rP();
+retryPendingRequests();
 </script>
 </body>
 </html>
