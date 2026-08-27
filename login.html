@@ -35,9 +35,18 @@ body{
   position:relative;z-index:2;width:100%;max-width:420px;
   background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
   border-radius:26px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  padding:38px 30px;
+  padding:30px 30px 38px;
   animation:cIn .6s var(--ease) both;
 }
+.back-btn{
+  display:flex;align-items:center;gap:7px;width:max-content;margin:0 0 12px auto;
+  padding:5px 2px;border:0;background:transparent;color:rgba(255,255,255,.58);
+  font-family:'Tajawal',sans-serif;font-size:12px;font-weight:600;cursor:pointer;
+  transition:color .25s var(--ease),transform .25s var(--ease);
+}
+.back-btn svg{width:15px;height:15px;stroke:var(--gdl);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.back-btn:hover{color:#fff;transform:translateX(3px)}
+.back-btn:focus-visible{outline:2px solid var(--gd);outline-offset:4px;border-radius:6px}
 @keyframes cIn{from{opacity:0;transform:translateY(22px) scale(.98)}to{opacity:1;transform:none}}
 .ll{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:20px}
 .ll img{width:82px;height:82px;object-fit:contain;background:#fff;border-radius:18px;padding:8px;border:1px solid rgba(255,255,255,.14)}
@@ -101,6 +110,10 @@ body{
 </svg>
 
 <main class="lcard">
+  <button class="back-btn" id="BACK" type="button" aria-label="العودة للصفحة السابقة">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    <span>العودة للصفحة السابقة</span>
+  </button>
   <div class="ll">
     <img src="logo.png" alt="شعار أعراف">
     <span class="biz-badge">بوابة الأعمال</span>
@@ -136,6 +149,11 @@ body{
 <script>
 function $(id){return document.getElementById(id)}
 function toast(m){var t=$('T');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2400)}
+
+$('BACK').onclick=function(){
+  if(document.referrer){history.back()}
+  else{window.location.href='index.html'}
+};
 
 /* إن كانت هناك جلسة قائمة، ادخل مباشرة */
 try{
