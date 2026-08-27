@@ -17,60 +17,69 @@ window.ARAF_PLANS = {
     key: 'sanad',
     name: 'باقة سند',
     tagline: 'الغطاء القانوني الأساسي لمنشأتك',
-    price: 1500,
+    price: 500,
     color: '#3D7B8A',
     quotas: {
-      consult:   { label: 'استشارات قانونية',        limit: 5 },
-      contracts: { label: 'مراجعة / صياغة عقود',      limit: 2 },
-      letters:   { label: 'خطابات وإنذارات رسمية',    limit: 2 },
-      najiz:     { label: 'خدمات ناجز',               limit: 2 },
-      memos:     { label: 'مذكرات قانونية',           limit: 0 }
+      consult:     { label: 'استشارات قانونية',                 limit: 3 },
+      contracts:   { label: 'صياغة أو مراجعة عقود',             limit: 2 },
+      letters:     { label: 'صياغة أو مراجعة خطابات أو إنذارات', limit: 2 },
+      najiz:       { label: 'طلبات عبر ناجز',                    limit: 2 },
+      violations:  { label: 'اعتراضات على مخالفات حكومية',       limit: 1 },
+      governance:  { label: 'أعمال حوكمة',                       limit: 0 },
+      memos:       { label: 'مذكرات قانونية',                    limit: 0 },
+      risk_review: { label: 'مراجعة المخاطر والالتزامات',         limit: 0 },
+      negotiation: { label: 'اجتماعات تفاوضية عن بُعد',          limit: 0 }
     },
     perks: [
-      'استشارات هاتفية ومرئية مع محامين مرخصين',
-      'الرد خلال يوم عمل واحد',
-      'المساعد القانوني الذكي بلا حدود'
+      'الاستشارات هاتفية أو مرئية أو مكتوبة حسب رغبة المنشأة',
+      'خصم 10% على أتعاب القضايا والترافع'
     ]
   },
   imad: {
     key: 'imad',
     name: 'باقة عماد',
-    tagline: 'ركيزتك القانونية الشهرية وأنت تنمو',
-    price: 3500,
+    tagline: 'الأنسب للشركات النامية',
+    price: 2500,
     color: '#C9A96E',
     featured: true,
     quotas: {
-      consult:   { label: 'استشارات قانونية',        limit: 12 },
-      contracts: { label: 'مراجعة / صياغة عقود',      limit: 5 },
-      letters:   { label: 'خطابات وإنذارات رسمية',    limit: 5 },
-      najiz:     { label: 'خدمات ناجز',               limit: 5 },
-      memos:     { label: 'مذكرات قانونية',           limit: 1 }
+      consult:     { label: 'استشارات قانونية',                 limit: 10 },
+      contracts:   { label: 'صياغة أو مراجعة عقود',             limit: 5 },
+      letters:     { label: 'صياغة أو مراجعة خطابات أو إنذارات', limit: 5 },
+      najiz:       { label: 'طلبات عبر ناجز',                    limit: 5 },
+      violations:  { label: 'اعتراضات على مخالفات حكومية',       limit: 3 },
+      governance:  { label: 'أعمال حوكمة',                       limit: 3 },
+      memos:       { label: 'مذكرات قانونية',                    limit: 0 },
+      risk_review: { label: 'مراجعة المخاطر والالتزامات',         limit: 0 },
+      negotiation: { label: 'اجتماعات تفاوضية عن بُعد',          limit: 0 }
     },
     perks: [
-      'كل مزايا باقة سند',
-      'مدير حساب قانوني مخصص',
-      'أولوية التنفيذ خلال ساعات العمل',
-      'مراجعة لوائح وسياسات داخلية'
+      'مدير حساب قانوني لمتابعة طلبات المنشأة',
+      'خصم 15% على أتعاب القضايا والترافع'
     ]
   },
   diwan: {
     key: 'diwan',
     name: 'باقة ديوان',
-    tagline: 'إدارة قانونية متكاملة — كأن لديك ديواناً داخلياً',
-    price: 7500,
+    tagline: 'إدارة قانونية متكاملة لمنشأتك',
+    price: 5000,
     color: '#1B3A4B',
     quotas: {
-      consult:   { label: 'استشارات قانونية',        limit: -1 },
-      contracts: { label: 'مراجعة / صياغة عقود',      limit: 12 },
-      letters:   { label: 'خطابات وإنذارات رسمية',    limit: -1 },
-      najiz:     { label: 'خدمات ناجز',               limit: 10 },
-      memos:     { label: 'مذكرات قانونية',           limit: 3 }
+      consult:     { label: 'استشارات قانونية',                 limit: -1 },
+      contracts:   { label: 'صياغة أو مراجعة عقود',             limit: 10 },
+      letters:     { label: 'صياغة أو مراجعة خطابات أو إنذارات', limit: 10 },
+      najiz:       { label: 'طلبات عبر ناجز',                    limit: 10 },
+      violations:  { label: 'اعتراضات على مخالفات حكومية',       limit: 6 },
+      governance:  { label: 'أعمال حوكمة',                       limit: 6 },
+      memos:       { label: 'مذكرات قانونية',                    limit: 3 },
+      risk_review: { label: 'مراجعة المخاطر والالتزامات',         limit: 1 },
+      negotiation: { label: 'اجتماعات تفاوضية عن بُعد',          limit: 1 }
     },
     perks: [
-      'كل مزايا باقة عماد',
-      'استشارات وخطابات بلا حدود',
-      'محامٍ مخصص + اجتماع شهري لمراجعة الموقف القانوني',
-      'خصم 20% على التوكيل والترافع في القضايا'
+      'مراجعة قانونية شهرية للمخاطر والالتزامات القائمة',
+      'حضور اجتماع تفاوضي واحد عن بُعد شهريًا',
+      'مستشار قانوني مخصص للمنشأة',
+      'خصم 20% على أتعاب القضايا والترافع'
     ]
   }
 };
@@ -86,7 +95,7 @@ window.ARAF_BIZ_ACCOUNTS = [
     type: 'شركة',
     plan: 'imad',
     start: '2026-08-01',
-    used: { consult: 4, contracts: 2, letters: 1, najiz: 0, memos: 0 },
+    used: { consult: 4, contracts: 2, letters: 1, najiz: 0, violations: 0, governance: 0, memos: 0, risk_review: 0, negotiation: 0 },
     manager: {
       name: 'أ. عبدالله الحربي',
       title: 'محامٍ مرخص — مدير حساب منشأتكم',
@@ -101,7 +110,7 @@ window.ARAF_BIZ_ACCOUNTS = [
     type: 'مؤسسة',
     plan: 'sanad',
     start: '2026-07-15',
-    used: { consult: 1, contracts: 0, letters: 0, najiz: 1, memos: 0 },
+    used: { consult: 1, contracts: 0, letters: 0, najiz: 1, violations: 0, governance: 0, memos: 0, risk_review: 0, negotiation: 0 },
     manager: {
       name: 'أ. سارة القحطاني',
       title: 'مستشارة قانونية — مسؤولة حساب منشأتكم',
@@ -116,7 +125,7 @@ window.ARAF_BIZ_ACCOUNTS = [
     type: 'شركة',
     plan: 'diwan',
     start: '2026-06-01',
-    used: { consult: 9, contracts: 6, letters: 3, najiz: 2, memos: 1 },
+    used: { consult: 9, contracts: 6, letters: 3, najiz: 2, violations: 0, governance: 0, memos: 1, risk_review: 0, negotiation: 0 },
     manager: {
       name: 'أ. خالد العتيبي',
       title: 'محامٍ مرخص — المحامي المخصص لمنشأتكم',
