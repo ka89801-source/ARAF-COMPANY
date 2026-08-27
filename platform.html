@@ -581,7 +581,7 @@ $('LOB').onclick=function(){
 
 /* ---------- بطاقة المحامي الموكّل (بطاقة داكنة) ---------- */
 function managerCard(){
-  var m=ACC.manager;if(!m||ACC.plan==='sanad')return'';
+  var m=ACC.manager;if(!m)return'';
   var initial=m.name.replace(/^أ\.\s*/,'').charAt(0);
   var waMsg='السلام عليكم '+m.name+'، معكم '+entityShort()+' (رمز '+ACC.code+') — لدينا استفسار.';
   return'<div class="mgr-card fu" style="animation-delay:.05s">'
