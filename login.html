@@ -149,41 +149,107 @@ body{
 
 <div class="toast" id="T"></div>
 
-<script src="accounts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 <script>
 function $(id){return document.getElementById(id)}
-function toast(m){var t=$('T');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2400)}
+function toast(m){var t=$('T');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2600)}
+function bump(){var b=$('LB');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
+
+var DB=window.ARAF_SUPABASE;
+var loggingIn=false;
+var loginButtonContent=$('LB').innerHTML;
 
 $('BACK').onclick=function(){
   window.location.replace('index.html');
 };
 
-/* إن كانت هناك جلسة قائمة، ادخل مباشرة */
-try{
-  var s=JSON.parse(localStorage.getItem('araf_biz_session')||'null');
-  if(s&&s.code&&(window.ARAF_BIZ_ACCOUNTS||[]).some(function(a){return a.code===s.code})){
-    window.location.replace('platform.html');
-  }
-}catch(e){}
+(async function checkExistingSession(){
+  try{
+    var result=await DB.auth.getSession();
+    var session=result.data&&result.data.session;
+    if(!session)return;
 
-function tryLogin(){
+    var entityResult=await DB
+      .from('business_entities')
+      .select('id,subscription_status')
+      .eq('auth_user_id',session.user.id)
+      .maybeSingle();
+
+    if(entityResult.data&&entityResult.data.subscription_status==='active'){
+      window.location.replace('platform.html');
+    }
+  }catch(e){
+    console.error('session-check',e);
+  }
+})();
+
+async function tryLogin(){
+  if(loggingIn)return;
+
   var code=$('bizCode').value.trim().toUpperCase();
   var pin=$('bizPin').value.trim();
+  var email=window.ARAF_AUTH_EMAIL(code);
 
-  if(!code||!pin){toast('يرجى إدخال رمز المنشأة والرقم السري');bump();return}
+  if(!email||!pin){
+    toast('يرجى إدخال رمز المنشأة والرقم السري');
+    bump();
+    return;
+  }
 
-  var acc=(window.ARAF_BIZ_ACCOUNTS||[]).find(function(a){
-    return a.code.toUpperCase()===code && String(a.pin)===pin
-  });
+  loggingIn=true;
+  $('LB').disabled=true;
+  $('LB').textContent='جارٍ التحقق...';
 
-  if(!acc){toast('البيانات غير صحيحة — تأكد من الرمز والرقم السري');bump();return}
+  try{
+    var authResult=await DB.auth.signInWithPassword({
+      email:email,
+      password:pin
+    });
 
-  localStorage.setItem('araf_biz_session',JSON.stringify({code:acc.code,ts:Date.now()}));
-  sessionStorage.setItem('araf_biz_fresh_login','1');
-  window.location.href='platform.html';
+    if(authResult.error||!authResult.data.user){
+      throw new Error('invalid-login');
+    }
+
+    var entityResult=await DB
+      .from('business_entities')
+      .select('id,code,subscription_status,subscription_end')
+      .eq('auth_user_id',authResult.data.user.id)
+      .maybeSingle();
+
+    if(entityResult.error||!entityResult.data){
+      await DB.auth.signOut();
+      throw new Error('missing-entity');
+    }
+
+    if(entityResult.data.code!==code){
+      await DB.auth.signOut();
+      throw new Error('invalid-code');
+    }
+
+    if(entityResult.data.subscription_status!=='active'){
+      await DB.auth.signOut();
+      toast('حساب المنشأة غير نشط حاليًا — تواصلوا مع فريق أعراف');
+      bump();
+      return;
+    }
+
+    sessionStorage.setItem('araf_biz_fresh_login','1');
+    window.location.replace('platform.html');
+  }catch(e){
+    if(e.message!=='missing-entity'&&e.message!=='invalid-code'){
+      console.error('business-login',e);
+    }
+    if(e.message!=='invalid-status'){
+      toast('البيانات غير صحيحة — تأكد من رمز المنشأة والرقم السري');
+      bump();
+    }
+  }finally{
+    loggingIn=false;
+    $('LB').disabled=false;
+    $('LB').innerHTML=loginButtonContent;
+  }
 }
-
-function bump(){var b=$('LB');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
 
 $('LB').onclick=tryLogin;
 $('bizPin').addEventListener('keydown',function(e){if(e.key==='Enter')tryLogin()});
