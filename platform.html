@@ -412,6 +412,8 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);min-h
 <div class="toast" id="T"></div>
 
 <script src="accounts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 <script>
 /* ============================================================
    أعراف للأعمال — منطق بوابة المنشآت (محفوظ وظيفياً)
@@ -420,21 +422,135 @@ function $(id){return document.getElementById(id)}
 function toast(m){var t=$('T');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2400)}
 function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML}
 
-/* ---------- حراسة الجلسة ---------- */
-var SESSION=null,ACC=null,PLAN=null;
-(function guard(){
-  try{SESSION=JSON.parse(localStorage.getItem('araf_biz_session')||'null')}catch(e){}
-  if(SESSION&&SESSION.code){
-    ACC=(window.ARAF_BIZ_ACCOUNTS||[]).find(function(a){return a.code===SESSION.code})||null;
+/* ---------- حراسة الجلسة وتحميل بيانات المنشأة ---------- */
+var SESSION=null,ACC=null,PLAN=null,REQUESTS=[];
+var DB=window.ARAF_SUPABASE;
+var STATUS_LABELS={
+  new:'جديد',
+  under_review:'قيد المراجعة',
+  in_progress:'قيد التنفيذ',
+  awaiting_client:'بانتظار ردكم',
+  completed:'مكتمل',
+  cancelled:'ملغي'
+};
+var QUOTA_LABELS={
+  included:'ضمن الباقة',
+  unlimited:'ضمن الباقة — بلا حد',
+  extra:'خدمة إضافية'
+};
+
+function mapRequest(r){
+  return{
+    dbId:r.id,
+    id:r.request_number,
+    k:r.service_key,
+    t:r.service_name_snapshot,
+    subject:r.subject,
+    details:r.details,
+    status:r.status,
+    statusLabel:STATUS_LABELS[r.status]||r.status,
+    quotaType:r.quota_type,
+    quotaLabel:QUOTA_LABELS[r.quota_type]||'—',
+    billingStatus:r.billing_status,
+    clientNote:r.client_visible_note,
+    entityName:r.entity_name_snapshot,
+    planName:r.plan_name_snapshot,
+    createdAt:r.created_at,
+    updatedAt:r.updated_at,
+    lastClientUpdateAt:r.last_client_update_at
+  };
+}
+
+function sumUsage(rows){
+  var used={};
+  (rows||[]).forEach(function(row){
+    used[row.service_key]=(used[row.service_key]||0)+Number(row.units||0);
+  });
+  return used;
+}
+
+async function boot(){
+  try{
+    var sessionResult=await DB.auth.getSession();
+    SESSION=sessionResult.data&&sessionResult.data.session;
+    if(!SESSION){
+      window.location.replace('login.html');
+      return;
+    }
+
+    var entityResult=await DB
+      .from('business_entities')
+      .select('*')
+      .eq('auth_user_id',SESSION.user.id)
+      .maybeSingle();
+
+    if(entityResult.error||!entityResult.data){
+      await DB.auth.signOut();
+      window.location.replace('login.html');
+      return;
+    }
+
+    var entity=entityResult.data;
+    if(entity.subscription_status!=='active'){
+      await DB.auth.signOut();
+      alert('حساب المنشأة غير نشط حاليًا — يرجى التواصل مع فريق أعراف');
+      window.location.replace('login.html');
+      return;
+    }
+
+    ACC={
+      id:entity.id,
+      code:entity.code,
+      name:entity.name,
+      type:entity.entity_type,
+      plan:entity.plan_key,
+      start:entity.subscription_start,
+      cycleStart:entity.current_cycle_start,
+      cycleEnd:entity.current_cycle_end,
+      used:{},
+      manager:entity.manager_name?{
+        name:entity.manager_name,
+        title:entity.manager_title||'محامٍ مخصص لمنشأتكم',
+        phone:entity.manager_phone||window.ARAF_BIZ_WHATSAPP,
+        hours:entity.manager_hours||'للطلبات والأسئلة والتواصل العاجل'
+      }:null
+    };
+
+    PLAN=window.ARAF_PLANS[ACC.plan];
+    if(!PLAN)throw new Error('الباقة المرتبطة بالمنشأة غير معروفة');
+
+    var results=await Promise.all([
+      DB.from('business_usage')
+        .select('service_key,units')
+        .eq('entity_id',ACC.id)
+        .eq('cycle_start',ACC.cycleStart)
+        .eq('cycle_end',ACC.cycleEnd)
+        .is('reversed_at',null),
+      DB.from('business_requests')
+        .select('id,request_number,service_key,service_name_snapshot,subject,details,status,quota_type,billing_status,client_visible_note,entity_name_snapshot,plan_name_snapshot,created_at,updated_at,last_client_update_at')
+        .eq('entity_id',ACC.id)
+        .is('archived_at',null)
+        .order('created_at',{ascending:false})
+        .limit(100)
+    ]);
+
+    if(results[0].error)throw results[0].error;
+    if(results[1].error)throw results[1].error;
+
+    ACC.used=sumUsage(results[0].data);
+    REQUESTS=(results[1].data||[]).map(mapRequest);
+    startPortal();
+  }catch(e){
+    console.error('business-portal-boot',e);
+    toast('تعذر تحميل بيانات المنشأة — حاول تسجيل الدخول مجددًا');
+    setTimeout(async function(){
+      await DB.auth.signOut();
+      window.location.replace('login.html');
+    },1800);
   }
-  if(!ACC){
-    localStorage.removeItem('araf_biz_session');
-    window.location.replace('login.html');
-    return;
-  }
-  PLAN=window.ARAF_PLANS[ACC.plan];
-})();
-if(!ACC)throw new Error('no-session');
+}
+
+function startPortal(){
 
 /* ---------- أدوات مساعدة ---------- */
 function greetByTime(){
@@ -451,10 +567,9 @@ function quotaLeft(k){
   return Math.max(0,q.limit-(ACC.used[k]||0));
 }
 function cycleDates(){
-  var s=new Date(ACC.start+'T00:00:00'),now=new Date();
-  var st=new Date(now.getFullYear(),now.getMonth(),s.getDate());
-  if(st>now)st.setMonth(st.getMonth()-1);
-  var en=new Date(st);en.setMonth(en.getMonth()+1);
+  var st=new Date(ACC.cycleStart+'T00:00:00');
+  var en=new Date(ACC.cycleEnd+'T23:59:59');
+  var now=new Date();
   var f=function(d){return d.toLocaleDateString('ar-SA',{day:'numeric',month:'long'})};
   return{from:f(st),to:f(en),daysLeft:Math.max(0,Math.ceil((en-now)/86400000))};
 }
@@ -507,45 +622,52 @@ var SVC=[
 ];
 function svcByKey(k){return SVC.find(function(s){return s.k===k})}
 
-/* ---------- سجل الطلبات وربط الداش بورد ---------- */
-function reqKey(){return'araf_biz_requests_'+ACC.code}
-function getReqs(){try{return JSON.parse(localStorage.getItem(reqKey())||'[]')}catch(e){return[]}}
-function setReqs(l){localStorage.setItem(reqKey(),JSON.stringify(l.slice(0,60)));syncReqCount()}
-function saveReq(r){var l=getReqs();l.unshift(r);setReqs(l)}
-function updateReq(id,patch){
-  var l=getReqs().map(function(r){
-    if(r.id!==id)return r;
-    Object.keys(patch).forEach(function(k){r[k]=patch[k]});
-    return r;
-  });
-  setReqs(l);
+/* ---------- سجل الطلبات المرتبط بـ Supabase ---------- */
+function getReqs(){return REQUESTS}
+function setReqs(l){REQUESTS=(l||[]).slice(0,100);syncReqCount()}
+function syncReqCount(){$('reqCount').textContent=REQUESTS.length}
+
+async function refreshUsage(){
+  var result=await DB.from('business_usage')
+    .select('service_key,units')
+    .eq('entity_id',ACC.id)
+    .eq('cycle_start',ACC.cycleStart)
+    .eq('cycle_end',ACC.cycleEnd)
+    .is('reversed_at',null);
+  if(!result.error)ACC.used=sumUsage(result.data);
 }
-function syncReqCount(){$('reqCount').textContent=getReqs().length}
-function dashboardEndpoint(){return String(window.ARAF_BIZ_REQUESTS_ENDPOINT||'').trim()}
-function sendToDashboard(r){
-  var endpoint=dashboardEndpoint();
-  if(!endpoint)return Promise.resolve(false);
-  updateReq(r.id,{delivery:'sending'});
-  return fetch(endpoint,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(r),
-    keepalive:true
-  }).then(function(res){
-    if(!res.ok)throw new Error('dashboard '+res.status);
-    updateReq(r.id,{delivery:'sent',sentAt:new Date().toISOString()});
-    return true;
-  }).catch(function(){
-    updateReq(r.id,{delivery:'pending'});
-    return false;
-  });
+
+async function refreshRequests(){
+  var result=await DB.from('business_requests')
+    .select('id,request_number,service_key,service_name_snapshot,subject,details,status,quota_type,billing_status,client_visible_note,entity_name_snapshot,plan_name_snapshot,created_at,updated_at,last_client_update_at')
+    .eq('entity_id',ACC.id)
+    .is('archived_at',null)
+    .order('created_at',{ascending:false})
+    .limit(100);
+  if(result.error){
+    console.error('refresh-business-requests',result.error);
+    return;
+  }
+  setReqs((result.data||[]).map(mapRequest));
+  if(cP==='requests')rP();
 }
-function retryPendingRequests(){
-  if(!dashboardEndpoint())return;
-  getReqs().filter(function(r){return r.delivery!=='sent'&&r.id}).forEach(sendToDashboard);
+
+function subscribeRequests(){
+  var channel=DB.channel('business-requests-'+ACC.id)
+    .on('postgres_changes',{
+      event:'*',
+      schema:'public',
+      table:'business_requests',
+      filter:'entity_id=eq.'+ACC.id
+    },function(){
+      refreshRequests();
+      refreshUsage();
+    })
+    .subscribe();
+  window.addEventListener('beforeunload',function(){DB.removeChannel(channel)});
 }
+
 syncReqCount();
-window.addEventListener('online',retryPendingRequests);
 
 /* ---------- ملخص الرصيد المصغر ---------- */
 (function mini(){
@@ -574,9 +696,10 @@ function nav(p){
 }
 document.querySelectorAll('.snb').forEach(function(b){b.onclick=function(){nav(this.dataset.p)}});
 $('MB').onclick=tSB;$('MO').onclick=cSB;if($('SBC'))$('SBC').onclick=cSB;
-$('LOB').onclick=function(){
-  localStorage.removeItem('araf_biz_session');
-  window.location.href='login.html';
+$('LOB').onclick=async function(){
+  $('LOB').disabled=true;
+  await DB.auth.signOut();
+  window.location.replace('login.html');
 };
 
 /* ---------- بطاقة المحامي الموكّل (بطاقة داكنة) ---------- */
@@ -676,7 +799,9 @@ function vRequests(){
         +'<div class="req-detail"><b>الخدمة</b>'+esc(r.t)+'</div>'
         +'<div class="req-detail"><b>المنشأة</b>'+esc(r.entityName||entityShort())+'</div>'
         +'<div class="req-detail"><b>الباقة</b>'+esc(r.planName||PLAN.name)+'</div>'
+        +'<div class="req-detail"><b>احتساب الطلب</b>'+esc(r.quotaLabel||'—')+'</div>'
         +'<div class="req-detail req-desc"><b>تفاصيل الطلب</b>'+esc(r.details||'لم تُضف تفاصيل إضافية لهذا الطلب.')+'</div>'
+        +(r.clientNote?'<div class="req-detail req-desc"><b>آخر تحديث من فريق أعراف</b>'+esc(r.clientNote)+'</div>':'')
       +'</div>'
     +'</article>';
   });
@@ -693,8 +818,8 @@ function vPlan(){
   h+='<div class="sec-title fu"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>مزايا باقتكم</div><div class="perk-list fu">';
   PLAN.perks.forEach(function(p){h+='<div class="perk-item"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>'+p+'</div>'});
   h+='</div>';
-  if(ACC.plan!=='diwan'){
-    var next=ACC.plan==='sanad'?window.ARAF_PLANS.imad:window.ARAF_PLANS.diwan;
+  if(ACC.plan!=='plus'){
+    var next=ACC.plan==='asas'?window.ARAF_PLANS.numu:window.ARAF_PLANS.plus;
     h+='<div class="upg-note fu">منشأتكم في نمو؟ <b>'+next.name+'</b> تمنحكم '+next.tagline+' — تواصلوا مع مدير حسابكم للترقية من الشهر القادم.<br><button onclick="askUpgrade(\''+next.key+'\')">أرغب بالترقية إلى '+next.name+' <span class="arr">←</span></button></div>';
   }else{
     h+='<div class="upg-note fu"><b>أنتم في أعلى باقاتنا.</b> شكراً لثقتكم — فريقنا القانوني المخصص رهن إشارتكم في أي وقت.</div>';
@@ -727,38 +852,45 @@ function openReq(k){
 function cM(){$('MDL').classList.remove('show')}
 $('MDL').addEventListener('click',function(e){if(e.target===this)cM()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')cM()});
-function sendReq(){
+async function sendReq(){
   var sub=$('rqSub').value.trim(),det=$('rqDet').value.trim();
   if(!sub){toast('يرجى كتابة عنوان الطلب');return}
-  var now=Date.now();
-  var request={
-    id:'ARB-'+ACC.code.replace(/[^A-Z0-9]/gi,'')+'-'+now.toString(36).toUpperCase(),
-    source:'araf-business-platform',
-    entityCode:ACC.code,
-    entityName:entityShort(),
-    entityType:ACC.type,
-    planKey:ACC.plan,
-    planName:PLAN.name,
-    k:curSvc.k,
-    t:curSvc.t,
-    subject:sub,
-    details:det,
-    status:'new',
-    statusLabel:'جديد',
-    delivery:dashboardEndpoint()?'pending':'local',
-    createdAt:new Date(now).toISOString(),
-    ts:now
-  };
+
   $('mdlA').disabled=true;
-  saveReq(request);
-  cM();
-  nav('requests');
-  toast('تم تسجيل طلبكم في طلبات منشأتكم');
-  sendToDashboard(request).then(function(sent){
-    if(sent)toast('تم إرسال طلبكم إلى فريق أعراف');
-    else if(dashboardEndpoint())toast('تم حفظ الطلب وسيُعاد إرساله عند عودة الاتصال');
-    if(cP==='requests')rP();
-  });
+  $('mdlA').textContent='جارٍ إرسال الطلب...';
+
+  try{
+    var idempotency=(window.crypto&&crypto.randomUUID)
+      ?crypto.randomUUID()
+      :'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+        var r=Math.random()*16|0,v=c==='x'?r:(r&3|8);return v.toString(16);
+      });
+
+    var result=await DB.rpc('business_create_request',{
+      p_service_key:curSvc.k,
+      p_subject:sub,
+      p_details:det,
+      p_priority:'normal',
+      p_idempotency_key:idempotency
+    });
+
+    if(result.error)throw result.error;
+
+    cM();
+    toast('تم إرسال طلبكم إلى فريق أعراف');
+    await Promise.all([refreshRequests(),refreshUsage()]);
+    nav('requests');
+  }catch(e){
+    console.error('create-business-request',e);
+    var message=String(e&&e.message||'');
+    if(message.indexOf('اشتراك')>=0||message.indexOf('دورة الاشتراك')>=0){
+      toast(message);
+    }else{
+      toast('تعذر إرسال الطلب الآن — حاول مرة أخرى');
+    }
+    $('mdlA').disabled=false;
+    $('mdlA').innerHTML='<svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>إرسال الطلب';
+  }
 }
 function askUpgrade(k){
   var p=window.ARAF_PLANS[k];
@@ -772,8 +904,14 @@ function askUpgrade(k){
 }
 
 /* ---------- البداية ---------- */
+window.nav=nav;
+window.openReq=openReq;
+window.askUpgrade=askUpgrade;
 rP();
-retryPendingRequests();
+subscribeRequests();
+}
+
+boot();
 </script>
 </body>
 </html>
