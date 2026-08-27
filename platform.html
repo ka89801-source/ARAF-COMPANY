@@ -494,12 +494,16 @@ $('tpAv').textContent=entityShort().replace(/^(شركة|مؤسسة|جمعية)\s
 
 /* ---------- الخدمات ---------- */
 var SVC=[
-  {k:'consult',ic:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>',t:'استشارة قانونية',d:'جلسة هاتفية أو مرئية مع محامٍ مختص في موضوع منشأتكم'},
-  {k:'contracts',ic:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',t:'صياغة أو مراجعة عقد',d:'عقود العمل، التوريد، الشراكات، الإيجار التجاري وغيرها'},
-  {k:'letters',ic:'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',t:'خطاب أو إنذار رسمي',d:'خطابات رسمية وإنذارات قانونية باسم منشأتكم'},
-  {k:'memos',ic:'<path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/>',t:'مذكرة قانونية',d:'مذكرات دفاع أو مطالبة معدة من محامين مختصين'},
-  {k:'najiz',ic:'<path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/>',t:'خدمات ناجز',d:'تنفيذ إجراءات منشأتكم في منصة ناجز وتوثيق الوكالات'},
-  {k:'general',ic:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',t:'طلب قانوني آخر',d:'لوائح داخلية، تحصيل ديون، حوكمة، أو أي احتياج قانوني آخر',free:true}
+  {k:'consult',ic:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>',t:'استشارة قانونية',d:'استشارة هاتفية أو مرئية أو مكتوبة بحسب رغبة المنشأة'},
+  {k:'contracts',ic:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',t:'صياغة أو مراجعة عقد',d:'صياغة العقود أو مراجعتها وفق احتياج منشأتكم'},
+  {k:'letters',ic:'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',t:'صياغة أو مراجعة خطاب أو إنذار',d:'خطابات رسمية وإنذارات قانونية باسم منشأتكم'},
+  {k:'najiz',ic:'<path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/>',t:'رفع طلب عبر ناجز',d:'إعداد الطلب ورفعه عبر منصة ناجز بحسب نطاق الخدمة'},
+  {k:'violations',ic:'<path d="M12 3l9 16H3z"/><path d="M12 9v4"/><circle cx="12" cy="16" r=".7"/>',t:'اعتراض على مخالفة حكومية',d:'إعداد الاعتراض ورفعه إلكترونيًا أمام الجهة الحكومية'},
+  {k:'governance',ic:'<path d="M4 20h16"/><path d="M6 17V9m4 8V9m4 8V9m4 8V9"/><path d="M3 9h18L12 3z"/>',t:'إعداد أو مراجعة عمل حوكمة',d:'إعداد أو مراجعة السياسات واللوائح والمحاضر وأعمال الحوكمة'},
+  {k:'memos',ic:'<path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/>',t:'إعداد مذكرة قانونية',d:'إعداد مذكرة قانونية وفق وقائع ومستندات الموضوع'},
+  {k:'risk_review',ic:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M8 4l-2-2M16 4l2-2"/>',t:'مراجعة قانونية شهرية',d:'مراجعة المخاطر والالتزامات القانونية القائمة للمنشأة'},
+  {k:'negotiation',ic:'<path d="M8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M16 11a4 4 0 1 0 0-8"/><path d="M2 21v-2a6 6 0 0 1 12 0v2"/><path d="M16 15a6 6 0 0 1 6 6"/>',t:'حضور اجتماع تفاوضي عن بُعد',d:'حضور مستشار أعراف اجتماعًا تفاوضيًا واحدًا عن بُعد'},
+  {k:'general',ic:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',t:'طلب قانوني آخر',d:'أي احتياج قانوني آخر غير مدرج ضمن الخدمات المحددة',free:true}
 ];
 function svcByKey(k){return SVC.find(function(s){return s.k===k})}
 
@@ -577,7 +581,7 @@ $('LOB').onclick=function(){
 
 /* ---------- بطاقة المحامي الموكّل (بطاقة داكنة) ---------- */
 function managerCard(){
-  var m=ACC.manager;if(!m)return'';
+  var m=ACC.manager;if(!m||ACC.plan==='sanad')return'';
   var initial=m.name.replace(/^أ\.\s*/,'').charAt(0);
   var waMsg='السلام عليكم '+m.name+'، معكم '+entityShort()+' (رمز '+ACC.code+') — لدينا استفسار.';
   return'<div class="mgr-card fu" style="animation-delay:.05s">'
@@ -619,9 +623,12 @@ function quotaCard(k){
 }
 
 function svcCard(s,i){
+  var q=PLAN.quotas[s.k];
+  var isExtra=!s.free&&q&&q.limit===0;
   var left=s.free?-2:quotaLeft(s.k);
   var tag;
   if(s.free)tag='<span class="svc-tag free">حسب الطلب</span>';
+  else if(isExtra)tag='<span class="svc-tag free">خارج الباقة</span>';
   else if(left<0)tag='<span class="svc-tag">بلا حدود</span>';
   else if(left===0)tag='<span class="svc-tag out">استُنفدت الحصة</span>';
   else tag='<span class="svc-tag">متبقٍ '+left+'</span>';
@@ -699,7 +706,10 @@ function vPlan(){
 var curSvc=null;
 function openReq(k){
   var s=svcByKey(k);if(!s)return;
-  if(!s.free&&quotaLeft(k)===0){
+  var q=PLAN.quotas[k];
+  if(!s.free&&q&&q.limit===0){
+    toast('هذه الخدمة غير مشمولة في باقتكم، ويمكن طلبها كخدمة إضافية');
+  }else if(!s.free&&quotaLeft(k)===0){
     toast('استنفدتم حصة هذه الخدمة — أرسلوا الطلب وسنوضح تفاصيل الخدمات الإضافية');
   }
   curSvc=s;
