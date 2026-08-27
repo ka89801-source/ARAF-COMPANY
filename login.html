@@ -134,7 +134,7 @@ body{
   </div>
   <div class="lfg">
     <label for="bizPin">الرقم السري</label>
-    <input type="password" id="bizPin" placeholder="••••••" inputmode="numeric" maxlength="6" autocomplete="off">
+    <input type="password" id="bizPin" placeholder="••••••••" inputmode="numeric" minlength="8" maxlength="8" pattern="[0-9]{8}" autocomplete="current-password">
   </div>
   <button class="lbtn" id="LB">الدخول إلى بوابة الأعمال <span class="arr">←</span></button>
 
@@ -191,8 +191,8 @@ async function tryLogin(){
   var pin=$('bizPin').value.trim();
   var email=window.ARAF_AUTH_EMAIL(code);
 
-  if(!email||!pin){
-    toast('يرجى إدخال رمز المنشأة والرقم السري');
+  if(!email||!/^[0-9]{8}$/.test(pin)){
+    toast('يرجى إدخال رمز المنشأة والرقم السري المكون من 8 أرقام');
     bump();
     return;
   }
