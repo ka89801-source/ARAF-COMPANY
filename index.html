@@ -108,7 +108,13 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
 .plan .tag{font-size:12.5px;color:var(--t2);line-height:1.95;margin:5px 0 18px;min-height:47px}
 .plan .price{font-family:'Cairo',sans-serif;font-size:33px;font-weight:900;color:var(--nv);letter-spacing:-1px;line-height:1}
 .plan .price small{font-size:13px;color:var(--tm);font-weight:600;letter-spacing:0}
-.plan .cyc{font-size:11px;color:var(--tm);margin:6px 0 18px}
+.plan .cyc{font-size:11px;color:var(--tm);margin:6px 0 14px}
+.plan-support{position:relative;display:grid;grid-template-columns:38px 1fr;align-items:center;gap:11px;margin:0 0 17px;padding:11px 14px 11px 12px;border:1px solid var(--line-gold);border-radius:14px;background:linear-gradient(110deg,rgba(201,169,110,.12),rgba(201,169,110,.035));overflow:hidden}
+.plan-support::before{content:'';position:absolute;right:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--gdl),var(--gd),var(--gdd))}
+.plan-support .ps-ic{width:36px;height:36px;border-radius:11px;background:var(--nv);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(27,58,75,.14)}
+.plan-support .ps-ic svg{width:18px;height:18px;stroke:var(--gdl);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.plan-support strong{display:block;font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:800;color:var(--nv);line-height:1.55}
+.plan-support small{display:block;margin-top:2px;font-size:10.5px;font-weight:500;color:var(--t2);line-height:1.65}
 .plan ul{list-style:none;flex:1;margin-bottom:22px;border-top:1px solid var(--line);padding-top:16px}
 .plan li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--t2);padding:6.5px 0;line-height:1.85}
 .plan li svg{width:15px;height:15px;stroke:var(--gdd);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-top:5px}
@@ -251,7 +257,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
     </div>
     <div class="strip-it">
       <div class="s-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
-      <div><h3>متابعة مخصصة</h3><p>مدير حساب أو مستشار مخصص بحسب الباقة</p></div>
+      <div><h3>محامٍ مخصص</h3><p>لطلباتكم وأسئلتكم وأي تواصل عاجل</p></div>
     </div>
   </div>
 </div>
@@ -274,15 +280,19 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
   <div class="sec-head rev">
     <span class="kicker">الباقات الشهرية</span>
     <h2>باقة لكل مرحلة من نمو منشأتكم</h2>
-    <p>أسماؤنا من معجمنا القانوني: <b>سند</b> يحفظ حقكم، <b>عماد</b> يرفع بنيانكم، و<b>ديوان</b> يدير شؤونكم.</p>
+    <p>ثلاث باقات واضحة تبدأ بالاحتياج الأساسي، وتواكب نمو منشأتكم حتى الدعم القانوني المتكامل.</p>
   </div>
   <div class="plans">
 
     <div class="plan rev">
-      <h3>باقة سند</h3>
+      <h3>أعراف أساس</h3>
       <div class="tag">الغطاء القانوني الأساسي للمنشآت الناشئة والمؤسسات الفردية</div>
       <div class="price">500 <small>ر.س / شهرياً</small></div>
       <div class="cyc">يتجدد الرصيد مطلع كل دورة شهرية</div>
+      <div class="plan-support" aria-label="ميزة المحامي المخصص">
+        <span class="ps-ic"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M18 8l2 2 4-4"/></svg></span>
+        <span><strong>محامٍ مخصص لمنشأتكم</strong><small>لطلباتكم وأسئلتكم وأي تواصل عاجل</small></span>
+      </div>
       <ul>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>3</b> استشارات قانونية هاتفية أو مرئية أو مكتوبة</span></li>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>صياغة أو مراجعة <b>عقدين</b></span></li>
@@ -291,15 +301,19 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>إعداد ورفع <b>اعتراض واحد</b> على مخالفة حكومية</span></li>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>خصم <b>10%</b> على أتعاب القضايا والترافع</span></li>
       </ul>
-      <a class="btn btn-out-light" href="#join" onclick="pickPlan('باقة سند')">أطلب باقة سند</a>
+      <a class="btn btn-out-light" href="#join" onclick="pickPlan('أعراف أساس')">أطلب أعراف أساس</a>
     </div>
 
     <div class="plan featured rev">
       <span class="plan-flag">الأنسب للشركات النامية</span>
-      <h3>باقة عماد</h3>
+      <h3>أعراف نمو</h3>
       <div class="tag">الركيزة القانونية الشهرية للشركات النامية ذات النشاط المستمر</div>
       <div class="price">2,500 <small>ر.س / شهرياً</small></div>
       <div class="cyc">يتجدد الرصيد مطلع كل دورة شهرية</div>
+      <div class="plan-support" aria-label="ميزة المحامي المخصص">
+        <span class="ps-ic"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M18 8l2 2 4-4"/></svg></span>
+        <span><strong>محامٍ مخصص لمنشأتكم</strong><small>لطلباتكم وأسئلتكم وأي تواصل عاجل</small></span>
+      </div>
       <ul>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>10</b> استشارات قانونية هاتفية أو مرئية أو مكتوبة</span></li>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>صياغة أو مراجعة <b>5 عقود</b></span></li>
@@ -310,14 +324,18 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>مدير حساب قانوني لمتابعة طلبات المنشأة</span></li>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>خصم <b>15%</b> على أتعاب القضايا والترافع</span></li>
       </ul>
-      <a class="btn btn-gold" href="#join" onclick="pickPlan('باقة عماد')">أطلب باقة عماد <span class="arr">←</span></a>
+      <a class="btn btn-gold" href="#join" onclick="pickPlan('أعراف نمو')">أطلب أعراف نمو <span class="arr">←</span></a>
     </div>
 
     <div class="plan rev">
-      <h3>باقة ديوان</h3>
+      <h3>أعراف بلس</h3>
       <div class="tag">إدارة قانونية متكاملة — كأن لدى منشأتكم ديوان محاماة داخلي</div>
       <div class="price">5,000 <small>ر.س / شهرياً</small></div>
       <div class="cyc">يتجدد الرصيد مطلع كل دورة شهرية</div>
+      <div class="plan-support" aria-label="ميزة المحامي المخصص">
+        <span class="ps-ic"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M18 8l2 2 4-4"/></svg></span>
+        <span><strong>محامٍ مخصص لمنشأتكم</strong><small>لطلباتكم وأسئلتكم وأي تواصل عاجل</small></span>
+      </div>
       <ul>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>استشارات قانونية هاتفية أو مرئية أو مكتوبة <b>بلا حد</b></span></li>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>صياغة أو مراجعة <b>10 عقود</b></span></li>
@@ -331,7 +349,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>مستشار قانوني مخصص للمنشأة</span></li>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>خصم <b>20%</b> على أتعاب القضايا والترافع</span></li>
       </ul>
-      <a class="btn btn-out-light" href="#join" onclick="pickPlan('باقة ديوان')">أطلب باقة ديوان</a>
+      <a class="btn btn-out-light" href="#join" onclick="pickPlan('أعراف بلس')">أطلب أعراف بلس</a>
     </div>
 
   </div>
@@ -353,7 +371,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
       <div class="jf"><label for="jName">اسم المنشأة</label><input id="jName" placeholder="مثال: شركة النخبة للتجارة"></div>
       <div class="jf"><label for="jType">نوع الكيان</label><select id="jType"><option>شركة</option><option>مؤسسة</option><option>جمعية / كيان غير ربحي</option></select></div>
       <div class="jf"><label for="jContact">اسم المسؤول ورقم جواله</label><input id="jContact" placeholder="الاسم — 05xxxxxxxx"></div>
-      <div class="jf"><label for="jPlan">الباقة المبدئية</label><select id="jPlan"><option>باقة عماد</option><option>باقة سند</option><option>باقة ديوان</option><option>لست متأكداً — أريد استشارتكم</option></select></div>
+      <div class="jf"><label for="jPlan">الباقة المبدئية</label><select id="jPlan"><option>أعراف نمو</option><option>أعراف أساس</option><option>أعراف بلس</option><option>لست متأكداً — أريد استشارتكم</option></select></div>
       <button class="btn btn-gold" style="width:100%" onclick="sendJoin()">إرسال طلب الانضمام <span class="arr">←</span></button>
       <div class="join-note">يفتح الطلب في واتساب فريق أعراف — لا يُنشأ أي حساب قبل تواصلنا معكم</div>
     </div>
