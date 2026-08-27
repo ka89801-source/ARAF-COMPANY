@@ -39,14 +39,18 @@ body{
   animation:cIn .6s var(--ease) both;
 }
 .back-btn{
-  display:flex;align-items:center;gap:7px;width:max-content;margin:0 0 12px auto;
-  padding:5px 2px;border:0;background:transparent;color:rgba(255,255,255,.58);
-  font-family:'Tajawal',sans-serif;font-size:12px;font-weight:600;cursor:pointer;
-  transition:color .25s var(--ease),transform .25s var(--ease);
+  display:flex;align-items:center;gap:8px;width:max-content;margin:0 0 14px auto;
+  padding:8px 14px;border:1px solid rgba(217,191,142,.5);border-radius:100px;
+  background:linear-gradient(120deg,rgba(201,169,110,.18),rgba(217,191,142,.08));
+  color:var(--gdl);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;cursor:pointer;
+  box-shadow:0 0 0 1px rgba(201,169,110,.06),0 0 18px rgba(201,169,110,.16);
+  transition:color .25s var(--ease),transform .25s var(--ease),border-color .25s var(--ease),box-shadow .25s var(--ease),background .25s var(--ease);
+  animation:backGlow 2.8s ease-in-out infinite;
 }
 .back-btn svg{width:15px;height:15px;stroke:var(--gdl);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.back-btn:hover{color:#fff;transform:translateX(3px)}
-.back-btn:focus-visible{outline:2px solid var(--gd);outline-offset:4px;border-radius:6px}
+.back-btn:hover{color:#fff;transform:translateX(3px);border-color:rgba(217,191,142,.8);background:rgba(201,169,110,.22);box-shadow:0 0 0 1px rgba(201,169,110,.1),0 0 24px rgba(201,169,110,.28)}
+.back-btn:focus-visible{outline:2px solid var(--gd);outline-offset:4px}
+@keyframes backGlow{0%,100%{box-shadow:0 0 0 1px rgba(201,169,110,.06),0 0 14px rgba(201,169,110,.12)}50%{box-shadow:0 0 0 1px rgba(201,169,110,.12),0 0 22px rgba(201,169,110,.24)}}
 @keyframes cIn{from{opacity:0;transform:translateY(22px) scale(.98)}to{opacity:1;transform:none}}
 .ll{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:20px}
 .ll img{width:82px;height:82px;object-fit:contain;background:#fff;border-radius:18px;padding:8px;border:1px solid rgba(255,255,255,.14)}
@@ -151,8 +155,7 @@ function $(id){return document.getElementById(id)}
 function toast(m){var t=$('T');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2400)}
 
 $('BACK').onclick=function(){
-  if(document.referrer){history.back()}
-  else{window.location.href='index.html'}
+  window.location.replace('index.html');
 };
 
 /* إن كانت هناك جلسة قائمة، ادخل مباشرة */
