@@ -306,7 +306,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);min-h
     </svg>
     <div><span class="sp-hello" id="spHello">أهلاً بكم في بوابة الأعمال</span></div>
     <div class="sp-entity" id="spEntity"></div>
-    <div class="sp-sub" id="spSub">فريقكم القانوني جاهز لخدمتكم</div>
+    <div class="sp-sub" id="spSub">فريقنا القانوني جاهز لخدمتكم</div>
     <div><span class="sp-seal" id="spSeal">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
       <span id="spPlan"></span>
@@ -466,7 +466,7 @@ function cycleDates(){
 
   $('spEntity').textContent=entityShort();
   $('spHello').textContent=fresh?'أهلاً بكم في بوابة الأعمال':greetByTime()+'، وأهلاً بعودتكم';
-  $('spSub').textContent='فريق '+ACC.type+'كم القانوني في أعراف جاهز لخدمتكم';
+  $('spSub').textContent='فريق '+ACC.type+'فريقنا القانوني في أعراف جاهز لخدمتكم';
   $('spPlan').textContent=PLAN.name;
 
   var dur=fresh?4300:2500;
@@ -637,7 +637,7 @@ function svcCard(s,i){
 
 function vHome(){
   var c=cycleDates();
-  var h='<div class="dw fu"><h1>'+greetByTime()+'، فريق <em>'+esc(entityShort())+'</em></h1><div class="dwsub">هذه لوحة منشأتكم في أعراف — رصيد <b>'+PLAN.name+'</b> يتجدد بعد <b>'+c.daysLeft+' يوماً</b>. كيف يمكن لفريقكم القانوني خدمتكم اليوم؟</div></div>';
+  var h='<div class="dw fu"><h1>'+greetByTime()+'، فريق <em>'+esc(entityShort())+'</em></h1><div class="dwsub">هذه لوحة منشأتكم في أعراف — رصيد <b>'+PLAN.name+'</b> يتجدد بعد <b>'+c.daysLeft+' يوماً</b>. كيف يمكن لفريقنا القانوني خدمتكم اليوم؟</div></div>';
   h+=managerCard();
   h+='<div class="sec-title fu"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>رصيد الباقة هذا الشهر</div>';
   h+='<div class="qgrid">';
@@ -697,7 +697,7 @@ function vPlan(){
     var next=ACC.plan==='sanad'?window.ARAF_PLANS.imad:window.ARAF_PLANS.diwan;
     h+='<div class="upg-note fu">منشأتكم في نمو؟ <b>'+next.name+'</b> تمنحكم '+next.tagline+' — تواصلوا مع مدير حسابكم للترقية من الشهر القادم.<br><button onclick="askUpgrade(\''+next.key+'\')">أرغب بالترقية إلى '+next.name+' <span class="arr">←</span></button></div>';
   }else{
-    h+='<div class="upg-note fu"><b>أنتم في أعلى باقاتنا.</b> شكراً لثقتكم — فريقكم القانوني المخصص رهن إشارتكم في أي وقت.</div>';
+    h+='<div class="upg-note fu"><b>أنتم في أعلى باقاتنا.</b> شكراً لثقتكم — فريقنا القانوني المخصص رهن إشارتكم في أي وقت.</div>';
   }
   return h;
 }
