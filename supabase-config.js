@@ -22,7 +22,7 @@
     }
   );
 
-  window.ARAF_BUSINESS_API_BASE = 'https://araf-site.vercel.app/api';
+  window.ARAF_BUSINESS_API_BASE = '/api';
 
   window.ARAF_AUTH_EMAIL = function (code) {
     var normalized = String(code || '').trim().toLowerCase();
