@@ -16,10 +16,13 @@
       auth: {
         persistSession: true,
         autoRefreshToken: true,
-        detectSessionInUrl: false
+        detectSessionInUrl: false,
+        storageKey: 'araf-business-auth'
       }
     }
   );
+
+  window.ARAF_BUSINESS_API_BASE = 'https://araf-site.vercel.app/api';
 
   window.ARAF_AUTH_EMAIL = function (code) {
     var normalized = String(code || '').trim().toLowerCase();
