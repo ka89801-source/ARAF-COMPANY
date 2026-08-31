@@ -508,12 +508,17 @@ async function boot(){
       cycleStart:entity.current_cycle_start,
       cycleEnd:entity.current_cycle_end,
       used:{},
-      manager:entity.manager_name?{
-        name:entity.manager_name,
-        title:entity.manager_title||'محامٍ مخصص لمنشأتكم',
+      manager:entity.plan_key==='asas'?null:{
+        name:entity.plan_key==='plus'
+          ?(entity.manager_name||'فريق أعراف القانوني')
+          :(entity.manager_name||'محامي المنشأة'),
+        title:entity.plan_key==='plus'
+          ?'فريق محامين مخصص لمنشأتكم'
+          :(entity.manager_title||'محامٍ مخصص لمنشأتكم'),
         phone:entity.manager_phone||window.ARAF_BIZ_WHATSAPP,
-        hours:entity.manager_hours||'للطلبات والأسئلة والتواصل العاجل'
-      }:null
+        hours:entity.manager_hours||'للطلبات والأسئلة والتواصل العاجل',
+        isTeam:entity.plan_key==='plus'
+      }
     };
 
     PLAN=window.ARAF_PLANS[ACC.plan];
@@ -711,7 +716,7 @@ function managerCard(){
     +'<svg class="mgr-scale" viewBox="0 0 200 220" aria-hidden="true"><line x1="100" y1="18" x2="100" y2="178"/><line x1="34" y1="48" x2="166" y2="48"/><circle cx="100" cy="14" r="5"/><line x1="34" y1="48" x2="16" y2="102"/><line x1="34" y1="48" x2="52" y2="102"/><path d="M10 102 a24 14 0 0 0 48 0"/><line x1="166" y1="48" x2="148" y2="102"/><line x1="166" y1="48" x2="184" y2="102"/><path d="M142 102 a24 14 0 0 0 48 0"/><line x1="64" y1="192" x2="136" y2="192"/></svg>'
     +'<div class="mgr-av-wrap"><div class="mgr-av">'+esc(initial)+'</div><span class="mgr-dot" aria-hidden="true"></span></div>'
     +'<div class="mgr-body">'
-      +'<span class="mgr-eyebrow">الموكّل من أعراف لمنشأتكم</span>'
+      +'<span class="mgr-eyebrow">'+(m.isTeam?'الفريق القانوني المخصص لمنشأتكم':'الموكّل من أعراف لمنشأتكم')+'</span>'
       +'<div class="mgr-name">'+esc(m.name)+'</div>'
       +'<div class="mgr-title">'+esc(m.title)+'</div>'
       +'<span class="mgr-hours"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+esc(m.hours||'خلال ساعات العمل')+'</span>'
@@ -839,10 +844,22 @@ function openReq(k){
   }
   curSvc=s;
   $('mdlT').textContent=s.t;
+  var examples={
+    consult:'مثال: استشارة حول إنهاء عقد موظف',
+    contracts:'مثال: مراجعة عقد توريد قبل التوقيع',
+    letters:'مثال: إعداد إنذار لمورد متأخر في التنفيذ',
+    najiz:'مثال: رفع طلب تنفيذ سند لأمر',
+    violations:'مثال: الاعتراض على مخالفة من جهة حكومية',
+    governance:'مثال: مراجعة لائحة صلاحيات مجلس الإدارة',
+    memos:'مثال: إعداد مذكرة بشأن مطالبة تعاقدية',
+    risk_review:'مثال: مراجعة الالتزامات القانونية للعقود القائمة',
+    negotiation:'مثال: حضور اجتماع تفاوضي مع مورد',
+    general:'مثال: طلب قانوني غير مدرج ضمن الخدمات'
+  };
   $('mdlB').innerHTML=
-    '<div class="mfg"><label for="rqSub">عنوان الطلب</label><input id="rqSub" placeholder="مثال: مراجعة عقد توريد مع مورد جديد"></div>'+
+    '<div class="mfg"><label for="rqSub">عنوان الطلب</label><input id="rqSub" placeholder="'+esc(examples[k]||examples.general)+'"></div>'+
     '<div class="mfg"><label for="rqDet">تفاصيل الطلب</label><textarea id="rqDet" rows="4" placeholder="اشرحوا الموضوع باختصار — وسيتواصل معكم الفريق لطلب أي مستندات"></textarea></div>'+
-    '<div class="mnote">سيُربط الطلب تلقائياً بمنشأة <b>'+esc(entityShort())+'</b> (رمز '+ACC.code+')، وسيظهر فوراً في «طلبات منشأتي». لا حاجة لإضافة بيانات مسؤول للتواصل.</div>';
+    '<div class="mnote">سيظهر الطلب في «طلبات منشأتي».</div>';
   $('mdlA').disabled=false;
   $('mdlA').innerHTML='<svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>إرسال الطلب';
   $('mdlA').onclick=sendReq;
@@ -866,15 +883,22 @@ async function sendReq(){
         var r=Math.random()*16|0,v=c==='x'?r:(r&3|8);return v.toString(16);
       });
 
-    var result=await DB.rpc('business_create_request',{
-      p_service_key:curSvc.k,
-      p_subject:sub,
-      p_details:det,
-      p_priority:'normal',
-      p_idempotency_key:idempotency
+    var response=await fetch((window.ARAF_BUSINESS_API_BASE||'')+'/create-business-request',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+SESSION.access_token
+      },
+      body:JSON.stringify({
+        service_key:curSvc.k,
+        subject:sub,
+        details:det,
+        priority:'normal',
+        idempotency_key:idempotency
+      })
     });
-
-    if(result.error)throw result.error;
+    var result=await response.json().catch(function(){return{}});
+    if(!response.ok)throw new Error(result.error||'تعذر إرسال الطلب');
 
     cM();
     toast('تم إرسال طلبكم إلى فريق أعراف');
@@ -892,20 +916,37 @@ async function sendReq(){
     $('mdlA').innerHTML='<svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>إرسال الطلب';
   }
 }
-function askUpgrade(k){
+async function askUpgrade(k){
   var p=window.ARAF_PLANS[k];
-  var msg='طلب ترقية باقة — أعراف للأعمال\n'
-    +'المنشأة: '+entityShort()+'\n'
-    +'رمز المنشأة: '+ACC.code+'\n'
-    +'الباقة الحالية: '+PLAN.name+'\n'
-    +'الترقية المطلوبة: '+p.name;
-  toast('جارٍ فتح واتساب لطلب الترقية');
-  setTimeout(function(){open('https://wa.me/'+(window.ARAF_BIZ_WHATSAPP||'')+'?text='+encodeURIComponent(msg),'_blank')},500);
+  try{
+    var response=await fetch((window.ARAF_BUSINESS_API_BASE||'')+'/create-business-lead',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+SESSION.access_token
+      },
+      body:JSON.stringify({
+        request_kind:'upgrade',
+        entity_name:entityShort(),
+        entity_code:ACC.code,
+        current_plan:PLAN.name,
+        requested_plan:p.name,
+        contact_details:SESSION.user.email||''
+      })
+    });
+    var data=await response.json().catch(function(){return{}});
+    if(!response.ok)throw new Error(data.error||'تعذر إرسال طلب الترقية');
+    toast('تم إرسال طلب الترقية إلى فريق أعراف');
+  }catch(e){
+    console.error('business-upgrade',e);
+    toast('تعذر إرسال طلب الترقية الآن — حاول مرة أخرى');
+  }
 }
 
 /* ---------- البداية ---------- */
 window.nav=nav;
 window.openReq=openReq;
+window.cM=cM;
 window.askUpgrade=askUpgrade;
 rP();
 subscribeRequests();
