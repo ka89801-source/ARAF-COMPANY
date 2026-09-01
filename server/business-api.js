@@ -50,9 +50,12 @@ function readBody(req) {
 
 function config() {
   const supabaseUrl = process.env.SUPABASE_URL || DEFAULT_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!serviceRoleKey) throw new Error('SUPABASE_SERVICE_ROLE_KEY is not configured');
-  return { supabaseUrl, serviceRoleKey };
+  const serverSecretKey =
+    process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serverSecretKey) {
+    throw new Error('SUPABASE_SECRET_KEY is not configured');
+  }
+  return { supabaseUrl, serverSecretKey };
 }
 
 async function fetchJson(url, options) {
@@ -70,12 +73,15 @@ async function fetchJson(url, options) {
 }
 
 function serviceHeaders(extra) {
-  const { serviceRoleKey } = config();
-  return Object.assign({
-    apikey: serviceRoleKey,
-    Authorization: 'Bearer ' + serviceRoleKey,
+  const { serverSecretKey } = config();
+  const headers = {
+    apikey: serverSecretKey,
     'Content-Type': 'application/json'
-  }, extra || {});
+  };
+  if (!serverSecretKey.startsWith('sb_secret_')) {
+    headers.Authorization = 'Bearer ' + serverSecretKey;
+  }
+  return Object.assign(headers, extra || {});
 }
 
 function bearerToken(req) {
@@ -92,10 +98,10 @@ async function authenticatedBusiness(req) {
     throw error;
   }
 
-  const { supabaseUrl, serviceRoleKey } = config();
+  const { supabaseUrl, serverSecretKey } = config();
   const auth = await fetchJson(supabaseUrl + '/auth/v1/user', {
     headers: {
-      apikey: serviceRoleKey,
+      apikey: serverSecretKey,
       Authorization: 'Bearer ' + token
     }
   });
@@ -125,11 +131,11 @@ async function authenticatedBusiness(req) {
 }
 
 async function callBusinessRpc(name, payload, userToken) {
-  const { supabaseUrl, serviceRoleKey } = config();
+  const { supabaseUrl, serverSecretKey } = config();
   return fetchJson(supabaseUrl + '/rest/v1/rpc/' + name, {
     method: 'POST',
     headers: {
-      apikey: serviceRoleKey,
+      apikey: serverSecretKey,
       Authorization: 'Bearer ' + userToken,
       'Content-Type': 'application/json',
       Prefer: 'return=representation'
