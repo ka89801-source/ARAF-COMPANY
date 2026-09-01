@@ -1,5 +1,6 @@
 -- أعراف للأعمال — طلبات التفعيل والتنبيهات البريدية
 -- شغّل هذا الملف مرة واحدة في Supabase SQL Editor.
+-- لا يحذف أو يغيّر أي جدول تابع لمنصة الأفراد.
 
 begin;
 
@@ -56,5 +57,22 @@ create index if not exists business_email_notifications_reference_idx
 alter table public.business_email_notifications enable row level security;
 revoke all on table public.business_email_notifications from anon, authenticated;
 
--- الإدخال والتحديث في الجدولين يتمان فقط من API الخادم باستخدام service_role.
+-- مزامنة مزايا الباقات مع العرض المعتمد:
+-- أساس بلا محامٍ مخصص، نمو بمحامٍ مخصص، وبلس بفريق محامين.
+update public.business_plans
+set benefits = '["متابعة الطلبات وحالتها ورصيد الباقة من خلال بوابة المنشأة"]'::jsonb,
+    updated_at = now()
+where plan_key = 'asas';
+
+update public.business_plans
+set benefits = '["محامٍ مخصص لمنشأتكم للطلبات والأسئلة والتواصل العاجل","مدير حساب قانوني لمتابعة طلبات المنشأة"]'::jsonb,
+    updated_at = now()
+where plan_key = 'numu';
+
+update public.business_plans
+set benefits = '["فريق محامين مخصص لمنشأتكم للطلبات والأسئلة والتواصل العاجل","مراجعة قانونية شهرية للمخاطر والالتزامات القائمة","حضور اجتماع تفاوضي واحد عن بُعد شهريًا"]'::jsonb,
+    updated_at = now()
+where plan_key = 'plus';
+
+-- الإدخال والتحديث في الجدولين يتمان فقط من API الخادم باستخدام المفتاح السري.
 commit;
