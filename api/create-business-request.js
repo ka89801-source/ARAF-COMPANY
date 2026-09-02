@@ -19,12 +19,12 @@ const SERVICES = {
   consult: 'استشارة قانونية',
   contracts: 'صياغة أو مراجعة عقد',
   letters: 'صياغة أو مراجعة خطاب أو إنذار',
-  najiz: 'طلب عبر ناجز',
+  najiz: 'رفع طلب عبر ناجز',
   violations: 'اعتراض على مخالفة حكومية',
-  governance: 'عمل حوكمة',
-  memos: 'مذكرة قانونية',
+  governance: 'إعداد أو مراجعة عمل حوكمة',
+  memos: 'إعداد مذكرة قانونية',
   risk_review: 'مراجعة قانونية شهرية',
-  negotiation: 'اجتماع تفاوضي عن بُعد',
+  negotiation: 'حضور اجتماع تفاوضي عن بُعد',
   general: 'طلب قانوني آخر'
 };
 
@@ -41,12 +41,14 @@ module.exports = async function handler(req, res) {
     const serviceKey = clean(body.service_key, 40);
     const subject = clean(body.subject, 180);
     const details = clean(body.details, 8000);
-    const priority = ['low', 'normal', 'high', 'urgent'].includes(body.priority)
+    const priority = ['normal', 'urgent'].includes(body.priority)
       ? body.priority
       : 'normal';
     const idempotencyKey = clean(body.idempotency_key, 80);
+    const validIdempotencyKey =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(idempotencyKey);
 
-    if (!SERVICES[serviceKey] || subject.length < 3 || !idempotencyKey) {
+    if (!SERVICES[serviceKey] || subject.length < 3 || !validIdempotencyKey) {
       return sendJson(res, 400, { error: 'بيانات الطلب غير مكتملة.' });
     }
 
