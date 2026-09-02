@@ -422,7 +422,7 @@ async function sendJoin(){
   btn.disabled=true;
   btn.textContent='جارٍ إرسال الطلب...';
   try{
-    var response=await fetch((window.ARAF_BUSINESS_API_BASE||'')+'/create-business-lead',{
+    var response=await fetch((window.ARAF_BUSINESS_API_BASE||'')+'/api/create-business-lead',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
