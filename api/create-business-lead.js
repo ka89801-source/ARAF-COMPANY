@@ -68,10 +68,17 @@ module.exports = async function handler(req, res) {
       contactDetails = clean(context.user.email, 300);
     }
 
-    if (entityName.length < 2 || !requestedPlan ||
-        (requestKind === 'upgrade' && requestedPlan === 'undecided') ||
-        (requestKind === 'activation' && contactDetails.length < 6)) {
-      return sendJson(res, 400, { error: 'يرجى إكمال بيانات الطلب.' });
+    if (entityName.length < 2) {
+      return sendJson(res, 400, { error: 'يرجى إدخال اسم المنشأة.', field: 'entity_name' });
+    }
+    if (!requestedPlan) {
+      return sendJson(res, 400, { error: 'يرجى اختيار باقة صحيحة.', field: 'requested_plan' });
+    }
+    if (requestKind === 'upgrade' && requestedPlan === 'undecided') {
+      return sendJson(res, 400, { error: 'يرجى اختيار الباقة المطلوبة للترقية.', field: 'requested_plan' });
+    }
+    if (requestKind === 'activation' && contactDetails.length < 6) {
+      return sendJson(res, 400, { error: 'يرجى إدخال اسم المسؤول ورقم الجوال.', field: 'contact_details' });
     }
 
     const row = await insertRow('business_activation_requests', {
