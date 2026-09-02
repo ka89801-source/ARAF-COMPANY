@@ -38,6 +38,18 @@ function normalizePlan(value) {
   return PLAN_ALIASES[clean(value, 100)] || '';
 }
 
+function normalizeSaudiMobile(value) {
+  const compact = clean(value, 30)
+    .replace(/[٠-٩]/g, digit => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)))
+    .replace(/[۰-۹]/g, digit => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)))
+    .replace(/[\s()-]/g, '');
+  if (/^05\d{8}$/.test(compact)) return compact;
+  if (/^5\d{8}$/.test(compact)) return '0' + compact;
+  if (/^9665\d{8}$/.test(compact)) return '+' + compact;
+  if (/^\+9665\d{8}$/.test(compact)) return compact;
+  return '';
+}
+
 module.exports = async function handler(req, res) {
   applyCors(req, res);
   if (handleOptions(req, res)) return;
@@ -54,6 +66,9 @@ module.exports = async function handler(req, res) {
     let entityName = clean(body.entity_name, 160);
     let entityType = clean(body.entity_type, 80);
     let entityCode = clean(body.entity_code, 40);
+    let contactName = clean(body.contact_name, 120);
+    const submittedPhone = clean(body.phone, 30);
+    let phone = normalizeSaudiMobile(submittedPhone);
     let contactDetails = clean(body.contact_details, 300);
     let currentPlan = clean(body.current_plan, 80);
     const requestedPlan = normalizePlan(body.requested_plan);
@@ -66,6 +81,8 @@ module.exports = async function handler(req, res) {
       entityCode = context.entity.code;
       currentPlan = context.entity.plan_key;
       contactDetails = clean(context.user.email, 300);
+    } else if (contactName || submittedPhone) {
+      contactDetails = contactName && phone ? contactName + ' — ' + phone : '';
     }
 
     if (entityName.length < 2) {
@@ -77,7 +94,14 @@ module.exports = async function handler(req, res) {
     if (requestKind === 'upgrade' && requestedPlan === 'undecided') {
       return sendJson(res, 400, { error: 'يرجى اختيار الباقة المطلوبة للترقية.', field: 'requested_plan' });
     }
-    if (requestKind === 'activation' && contactDetails.length < 6) {
+    if (requestKind === 'activation' && (contactName || submittedPhone)) {
+      if (contactName.length < 2) {
+        return sendJson(res, 400, { error: 'يرجى إدخال اسم المسؤول.', field: 'contact_name' });
+      }
+      if (!phone) {
+        return sendJson(res, 400, { error: 'يرجى إدخال رقم جوال سعودي صحيح.', field: 'phone' });
+      }
+    } else if (requestKind === 'activation' && contactDetails.length < 6) {
       return sendJson(res, 400, { error: 'يرجى إدخال اسم المسؤول ورقم الجوال.', field: 'contact_details' });
     }
 
