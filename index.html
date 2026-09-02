@@ -368,12 +368,12 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
       <div class="join-step"><span class="n">٣</span>تستلمون رمز المنشأة والرقم السري</div>
     </div>
     <div class="join-form rev">
-      <div class="jf"><label for="jName">اسم المنشأة</label><input id="jName" placeholder="مثال: شركة النخبة للتجارة"></div>
+      <div class="jf"><label for="jName">اسم المنشأة</label><input id="jName" maxlength="160" autocomplete="organization" placeholder="مثال: شركة النخبة للتجارة"></div>
       <div class="jf"><label for="jType">نوع الكيان</label><select id="jType"><option>شركة</option><option>مؤسسة</option><option>جمعية / كيان غير ربحي</option></select></div>
-      <div class="jf"><label for="jContact">اسم المسؤول ورقم جواله</label><input id="jContact" placeholder="الاسم — 05xxxxxxxx"></div>
+      <div class="jf"><label for="jContact">اسم المسؤول ورقم جواله</label><input id="jContact" maxlength="300" autocomplete="off" placeholder="الاسم — 05xxxxxxxx"></div>
       <div class="jf"><label for="jPlan">الباقة المبدئية</label><select id="jPlan"><option value="numu">أعراف نمو</option><option value="asas">أعراف أساس</option><option value="plus">أعراف بلس</option><option value="undecided">لست متأكداً — أريد استشارتكم</option></select></div>
       <button type="button" class="btn btn-gold" id="joinSubmit" style="width:100%" onclick="sendJoin()">إرسال طلب الانضمام <span class="arr">←</span></button>
-      <div class="join-note" id="joinStatus">يصل الطلب مباشرة إلى فريق أعراف، وسنتواصل معكم لاستكمال التفعيل</div>
+      <div class="join-note" id="joinStatus" aria-live="polite">يصل الطلب مباشرة إلى فريق أعراف، وسنتواصل معكم لاستكمال التفعيل</div>
     </div>
   </div>
   <svg class="dark-scale" viewBox="0 0 200 220" aria-hidden="true">
@@ -415,12 +415,20 @@ var consultantBtn=$('consultantBtn');
 if(consultantBtn)consultantBtn.href=waUrl('السلام عليكم، أرغب بالتحدث مع مستشار بخصوص أعراف للأعمال.');
 function pickPlan(p){var s=$('jPlan');s.value=p}
 async function sendJoin(){
-  var n=$('jName').value.trim(),c=$('jContact').value.trim();
-  if(!n){$('jName').focus();return}
-  if(!c){$('jContact').focus();return}
+  var n=$('jName').value.trim(),c=$('jContact').value.trim(),p=$('jPlan').value;
   var btn=$('joinSubmit'),status=$('joinStatus');
+  function showJoinError(message,fieldId){
+    status.textContent=message;
+    status.style.color='#f0b8b8';
+    if(fieldId)$(fieldId).focus();
+  }
+  if(n.length<2){showJoinError('يرجى إدخال اسم المنشأة.','jName');return}
+  if(c.length<6){showJoinError('يرجى إدخال اسم المسؤول ورقم الجوال.','jContact');return}
+  if(['asas','numu','plus','undecided'].indexOf(p)===-1){showJoinError('يرجى اختيار الباقة المبدئية.','jPlan');return}
   btn.disabled=true;
   btn.textContent='جارٍ إرسال الطلب...';
+  status.textContent='جارٍ إرسال طلب الانضمام...';
+  status.style.color='rgba(255,255,255,.55)';
   try{
     var response=await fetch('/api/create-business-lead',{
       method:'POST',
@@ -430,7 +438,7 @@ async function sendJoin(){
         entity_name:n,
         entity_type:$('jType').value,
         contact_details:c,
-        requested_plan:$('jPlan').value,
+        requested_plan:p,
         website:''
       })
     });
@@ -442,7 +450,7 @@ async function sendJoin(){
     ['jName','jContact'].forEach(function(id){$(id).value=''});
   }catch(e){
     console.error('business-lead',e);
-    status.textContent='تعذر إرسال الطلب الآن. يرجى المحاولة مرة أخرى.';
+    status.textContent=e&&e.message?e.message:'تعذر إرسال الطلب الآن. يرجى المحاولة مرة أخرى.';
     status.style.color='#f0b8b8';
     btn.disabled=false;
     btn.innerHTML='إرسال طلب الانضمام <span class="arr">←</span>';
