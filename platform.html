@@ -397,14 +397,14 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);min-h
   <div class="mdlb">
     <div class="mdlh">
       <h3 id="mdlT"></h3>
-      <button class="mdlx" onclick="cM()" aria-label="إغلاق">
+      <button type="button" class="mdlx" id="mdlClose" aria-label="إغلاق">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="mdlbd" id="mdlB"></div>
     <div class="mdlft">
-      <button class="bs" onclick="cM()">إلغاء</button>
-      <button class="bp" id="mdlA">إرسال الطلب</button>
+      <button type="button" class="bs" id="mdlCancel">إلغاء</button>
+      <button type="button" class="bp" id="mdlA">إرسال الطلب</button>
     </div>
   </div>
 </div>
@@ -423,13 +423,13 @@ function toast(m){var t=$('T');t.textContent=m;t.classList.add('show');setTimeou
 function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML}
 
 /* ---------- حراسة الجلسة وتحميل بيانات المنشأة ---------- */
-var SESSION=null,ACC=null,PLAN=null,REQUESTS=[];
+var SESSION=null,ACC=null,PLAN=null,REQUESTS=[],SERVICE_CATALOG={};
 var DB=window.ARAF_SUPABASE;
 var STATUS_LABELS={
   new:'جديد',
   under_review:'قيد المراجعة',
   in_progress:'قيد التنفيذ',
-  awaiting_client:'بانتظار ردكم',
+  awaiting_client:'بانتظار رد المنشأة',
   completed:'مكتمل',
   cancelled:'ملغي'
 };
@@ -440,6 +440,10 @@ var QUOTA_LABELS={
 };
 
 function mapRequest(r){
+  var quotaLabel=QUOTA_LABELS[r.quota_type]||'—';
+  if(r.quota_type==='included'){
+    quotaLabel=r.quota_counted?'ضمن الباقة — تم الاحتساب':'ضمن الباقة — بانتظار الاحتساب';
+  }
   return{
     dbId:r.id,
     id:r.request_number,
@@ -450,7 +454,8 @@ function mapRequest(r){
     status:r.status,
     statusLabel:STATUS_LABELS[r.status]||r.status,
     quotaType:r.quota_type,
-    quotaLabel:QUOTA_LABELS[r.quota_type]||'—',
+    quotaCounted:Boolean(r.quota_counted),
+    quotaLabel:quotaLabel,
     billingStatus:r.billing_status,
     clientNote:r.client_visible_note,
     entityName:r.entity_name_snapshot,
@@ -480,7 +485,7 @@ async function boot(){
 
     var entityResult=await DB
       .from('business_entities')
-      .select('*')
+      .select('id,code,name,entity_type,plan_key,subscription_status,subscription_start,subscription_end,current_cycle_start,current_cycle_end,manager_name,manager_title,manager_phone,manager_hours')
       .eq('auth_user_id',SESSION.user.id)
       .maybeSingle();
 
@@ -521,10 +526,22 @@ async function boot(){
       }
     };
 
-    PLAN=window.ARAF_PLANS[ACC.plan];
-    if(!PLAN)throw new Error('الباقة المرتبطة بالمنشأة غير معروفة');
+    var planFallback=window.ARAF_PLANS[ACC.plan];
+    if(!planFallback)throw new Error('الباقة المرتبطة بالمنشأة غير معروفة');
 
     var results=await Promise.all([
+      DB.from('business_plans')
+        .select('plan_key,name,tagline,price_monthly,benefits,featured')
+        .eq('plan_key',ACC.plan)
+        .eq('active',true)
+        .maybeSingle(),
+      DB.from('business_plan_services')
+        .select('service_key,quota_limit')
+        .eq('plan_key',ACC.plan),
+      DB.from('business_services')
+        .select('service_key,name,description,auto_count,display_order')
+        .eq('active',true)
+        .order('display_order',{ascending:true}),
       DB.from('business_usage')
         .select('service_key,units')
         .eq('entity_id',ACC.id)
@@ -532,18 +549,53 @@ async function boot(){
         .eq('cycle_end',ACC.cycleEnd)
         .is('reversed_at',null),
       DB.from('business_requests')
-        .select('id,request_number,service_key,service_name_snapshot,subject,details,status,quota_type,billing_status,client_visible_note,entity_name_snapshot,plan_name_snapshot,created_at,updated_at,last_client_update_at')
+        .select('id,request_number,service_key,service_name_snapshot,subject,details,status,quota_type,quota_counted,billing_status,client_visible_note,entity_name_snapshot,plan_name_snapshot,created_at,updated_at,last_client_update_at')
         .eq('entity_id',ACC.id)
         .is('archived_at',null)
         .order('created_at',{ascending:false})
         .limit(100)
     ]);
 
-    if(results[0].error)throw results[0].error;
-    if(results[1].error)throw results[1].error;
+    results.forEach(function(result){if(result.error)throw result.error});
+    if(!results[0].data)throw new Error('تعذر قراءة الباقة الفعلية للمنشأة');
 
-    ACC.used=sumUsage(results[0].data);
-    REQUESTS=(results[1].data||[]).map(mapRequest);
+    var planRow=results[0].data;
+    PLAN={
+      key:planRow.plan_key,
+      name:planRow.name,
+      tagline:planRow.tagline||planFallback.tagline,
+      price:Number(planRow.price_monthly),
+      color:planFallback.color,
+      featured:Boolean(planRow.featured),
+      quotas:{},
+      perks:Array.isArray(planRow.benefits)?planRow.benefits.slice():planFallback.perks.slice()
+    };
+    if(!Number.isFinite(PLAN.price))PLAN.price=planFallback.price;
+
+    Object.keys(planFallback.quotas).forEach(function(key){
+      PLAN.quotas[key]={
+        label:planFallback.quotas[key].label,
+        limit:null
+      };
+    });
+    (results[1].data||[]).forEach(function(row){
+      if(PLAN.quotas[row.service_key]){
+        PLAN.quotas[row.service_key].limit=Number(row.quota_limit);
+      }
+    });
+    var missingLimit=Object.keys(PLAN.quotas).find(function(key){
+      return !Number.isInteger(PLAN.quotas[key].limit);
+    });
+    if(missingLimit)throw new Error('رصيد الباقة غير مكتمل للخدمة: '+missingLimit);
+
+    (results[2].data||[]).forEach(function(service){
+      SERVICE_CATALOG[service.service_key]=service;
+    });
+    var requiredServices=['consult','contracts','letters','najiz','violations','governance','memos','risk_review','negotiation','general'];
+    var missingService=requiredServices.find(function(key){return !SERVICE_CATALOG[key]});
+    if(missingService)throw new Error('تعريف الخدمة غير موجود: '+missingService);
+    ACC.used=sumUsage(results[3].data);
+    REQUESTS=(results[4].data||[]).map(mapRequest);
     startPortal();
   }catch(e){
     console.error('business-portal-boot',e);
@@ -577,6 +629,12 @@ function cycleDates(){
   var now=new Date();
   var f=function(d){return d.toLocaleDateString('ar-SA',{day:'numeric',month:'long'})};
   return{from:f(st),to:f(en),daysLeft:Math.max(0,Math.ceil((en-now)/86400000))};
+}
+function formatDateTime(value){
+  if(!value)return'لا يوجد تحديث لاحق';
+  var date=new Date(value);
+  if(Number.isNaN(date.getTime()))return'—';
+  return date.toLocaleString('ar-SA',{day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'});
 }
 
 /* ---------- شاشة الترحيب ---------- */
@@ -625,6 +683,14 @@ var SVC=[
   {k:'negotiation',ic:'<path d="M8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M16 11a4 4 0 1 0 0-8"/><path d="M2 21v-2a6 6 0 0 1 12 0v2"/><path d="M16 15a6 6 0 0 1 6 6"/>',t:'حضور اجتماع تفاوضي عن بُعد',d:'حضور مستشار أعراف اجتماعًا تفاوضيًا واحدًا عن بُعد'},
   {k:'general',ic:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',t:'طلب قانوني آخر',d:'أي احتياج قانوني آخر غير مدرج ضمن الخدمات المحددة',free:true}
 ];
+SVC=SVC.map(function(service){
+  var live=SERVICE_CATALOG[service.k];
+  if(!live)return service;
+  service.t=live.name;
+  service.d=live.description||service.d;
+  service.free=live.auto_count===false;
+  return service;
+});
 function svcByKey(k){return SVC.find(function(s){return s.k===k})}
 
 /* ---------- سجل الطلبات المرتبط بـ Supabase ---------- */
@@ -639,12 +705,18 @@ async function refreshUsage(){
     .eq('cycle_start',ACC.cycleStart)
     .eq('cycle_end',ACC.cycleEnd)
     .is('reversed_at',null);
-  if(!result.error)ACC.used=sumUsage(result.data);
+  if(result.error){
+    console.error('refresh-business-usage',result.error);
+    return;
+  }
+  ACC.used=sumUsage(result.data);
+  renderMiniUsage();
+  if(cP==='home'||cP==='services'||cP==='subscription')rP();
 }
 
 async function refreshRequests(){
   var result=await DB.from('business_requests')
-    .select('id,request_number,service_key,service_name_snapshot,subject,details,status,quota_type,billing_status,client_visible_note,entity_name_snapshot,plan_name_snapshot,created_at,updated_at,last_client_update_at')
+    .select('id,request_number,service_key,service_name_snapshot,subject,details,status,quota_type,quota_counted,billing_status,client_visible_note,entity_name_snapshot,plan_name_snapshot,created_at,updated_at,last_client_update_at')
     .eq('entity_id',ACC.id)
     .is('archived_at',null)
     .order('created_at',{ascending:false})
@@ -675,7 +747,7 @@ function subscribeRequests(){
 syncReqCount();
 
 /* ---------- ملخص الرصيد المصغر ---------- */
-(function mini(){
+function renderMiniUsage(){
   var tot=0,used=0;
   Object.keys(PLAN.quotas).forEach(function(k){
     var q=PLAN.quotas[k];
@@ -685,7 +757,8 @@ syncReqCount();
   $('miniUsed').textContent=used;
   $('miniLeft').textContent=Math.max(0,tot-used);
   $('miniFill').style.width=(tot?Math.min(100,Math.round(used/tot*100)):0)+'%';
-})();
+}
+renderMiniUsage();
 
 /* ---------- التنقل ---------- */
 var cP='home';
@@ -795,7 +868,8 @@ function vRequests(){
   }
   l.forEach(function(r,i){
     var s=svcByKey(r.k)||SVC[SVC.length-1];
-    var when=new Date(r.createdAt||r.ts).toLocaleString('ar-SA',{day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'});
+    var when=formatDateTime(r.createdAt||r.ts);
+    var visibleUpdate=formatDateTime(r.lastClientUpdateAt);
     var status=r.statusLabel||'جديد';
     h+='<article class="req-item fu" style="animation-delay:.'+(i%5)+'s">'
       +'<div class="req-head"><div class="req-ic"><svg viewBox="0 0 24 24">'+s.ic+'</svg></div><div class="req-body"><h4>'+esc(r.subject||r.t)+'</h4><span>'+esc(r.t)+' — '+esc(when)+'</span></div><span class="req-st">'+esc(status)+'</span></div>'
@@ -805,6 +879,7 @@ function vRequests(){
         +'<div class="req-detail"><b>المنشأة</b>'+esc(r.entityName||entityShort())+'</div>'
         +'<div class="req-detail"><b>الباقة</b>'+esc(r.planName||PLAN.name)+'</div>'
         +'<div class="req-detail"><b>احتساب الطلب</b>'+esc(r.quotaLabel||'—')+'</div>'
+        +'<div class="req-detail"><b>آخر تحديث ظاهر للمنشأة</b>'+esc(visibleUpdate)+'</div>'
         +'<div class="req-detail req-desc"><b>تفاصيل الطلب</b>'+esc(r.details||'لم تُضف تفاصيل إضافية لهذا الطلب.')+'</div>'
         +(r.clientNote?'<div class="req-detail req-desc"><b>آخر تحديث من فريق أعراف</b>'+esc(r.clientNote)+'</div>':'')
       +'</div>'
@@ -867,6 +942,8 @@ function openReq(k){
   setTimeout(function(){var f=$('rqSub');if(f&&!isMobile())f.focus()},80);
 }
 function cM(){$('MDL').classList.remove('show')}
+$('mdlClose').addEventListener('click',cM);
+$('mdlCancel').addEventListener('click',cM);
 $('MDL').addEventListener('click',function(e){if(e.target===this)cM()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')cM()});
 async function sendReq(){
@@ -883,7 +960,7 @@ async function sendReq(){
         var r=Math.random()*16|0,v=c==='x'?r:(r&3|8);return v.toString(16);
       });
 
-    var response=await fetch((window.ARAF_BUSINESS_API_BASE||'')+'/create-business-request',{
+    var response=await fetch('/api/create-business-request',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
@@ -900,10 +977,15 @@ async function sendReq(){
     var result=await response.json().catch(function(){return{}});
     if(!response.ok)throw new Error(result.error||'تعذر إرسال الطلب');
 
+    if(result.request&&result.request.id){
+      setReqs([mapRequest(result.request)].concat(REQUESTS.filter(function(item){
+        return item.dbId!==result.request.id;
+      })));
+    }
     cM();
     toast('تم إرسال طلبكم إلى فريق أعراف');
-    await Promise.all([refreshRequests(),refreshUsage()]);
     nav('requests');
+    await Promise.all([refreshRequests(),refreshUsage()]);
   }catch(e){
     console.error('create-business-request',e);
     var message=String(e&&e.message||'');
@@ -919,7 +1001,7 @@ async function sendReq(){
 async function askUpgrade(k){
   var p=window.ARAF_PLANS[k];
   try{
-    var response=await fetch((window.ARAF_BUSINESS_API_BASE||'')+'/create-business-lead',{
+    var response=await fetch('/api/create-business-lead',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
@@ -929,8 +1011,8 @@ async function askUpgrade(k){
         request_kind:'upgrade',
         entity_name:entityShort(),
         entity_code:ACC.code,
-        current_plan:PLAN.name,
-        requested_plan:p.name,
+        current_plan:PLAN.key,
+        requested_plan:p.key,
         contact_details:SESSION.user.email||''
       })
     });
