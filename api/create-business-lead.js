@@ -15,6 +15,29 @@ const {
   errorResponse
 } = require('../server/business-api');
 
+const PLAN_NAMES = {
+  asas: 'أعراف أساس',
+  numu: 'أعراف نمو',
+  plus: 'أعراف بلس',
+  undecided: 'غير محدد — يرغب باستشارة الفريق'
+};
+
+const PLAN_ALIASES = {
+  asas: 'asas',
+  'أعراف أساس': 'asas',
+  numu: 'numu',
+  'أعراف نمو': 'numu',
+  plus: 'plus',
+  'أعراف بلس': 'plus',
+  undecided: 'undecided',
+  'لست متأكداً — أريد استشارتكم': 'undecided',
+  'لست متأكدا — أريد استشارتكم': 'undecided'
+};
+
+function normalizePlan(value) {
+  return PLAN_ALIASES[clean(value, 100)] || '';
+}
+
 module.exports = async function handler(req, res) {
   applyCors(req, res);
   if (handleOptions(req, res)) return;
@@ -33,7 +56,7 @@ module.exports = async function handler(req, res) {
     let entityCode = clean(body.entity_code, 40);
     let contactDetails = clean(body.contact_details, 300);
     let currentPlan = clean(body.current_plan, 80);
-    const requestedPlan = clean(body.requested_plan, 100);
+    const requestedPlan = normalizePlan(body.requested_plan);
     let context = null;
 
     if (requestKind === 'upgrade') {
@@ -46,6 +69,7 @@ module.exports = async function handler(req, res) {
     }
 
     if (entityName.length < 2 || !requestedPlan ||
+        (requestKind === 'upgrade' && requestedPlan === 'undecided') ||
         (requestKind === 'activation' && contactDetails.length < 6)) {
       return sendJson(res, 400, { error: 'يرجى إكمال بيانات الطلب.' });
     }
@@ -79,8 +103,8 @@ module.exports = async function handler(req, res) {
         '<p><b>المنشأة:</b> ' + escapeHtml(entityName) + '</p>' +
         '<p><b>نوع الكيان:</b> ' + escapeHtml(entityType || 'غير محدد') + '</p>' +
         (entityCode ? '<p><b>رمز المنشأة:</b> ' + escapeHtml(entityCode) + '</p>' : '') +
-        (currentPlan ? '<p><b>الباقة الحالية:</b> ' + escapeHtml(currentPlan) + '</p>' : '') +
-        '<p><b>الباقة المطلوبة:</b> ' + escapeHtml(requestedPlan) + '</p>' +
+        (currentPlan ? '<p><b>الباقة الحالية:</b> ' + escapeHtml(PLAN_NAMES[currentPlan] || currentPlan) + '</p>' : '') +
+        '<p><b>الباقة المطلوبة:</b> ' + escapeHtml(PLAN_NAMES[requestedPlan]) + '</p>' +
         '<p><b>بيانات التواصل:</b> ' + escapeHtml(contactDetails || 'من حساب المنشأة') + '</p>' +
         '<p style="color:#647985">تم حفظ الطلب في قاعدة بيانات أعراف للشركات.</p>' +
         '</div>'
