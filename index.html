@@ -301,7 +301,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>إعداد ورفع <b>اعتراض واحد</b> على مخالفة حكومية</span></li>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>خصم <b>10%</b> على أتعاب القضايا والترافع</span></li>
       </ul>
-      <a class="btn btn-out-light" href="#join" onclick="pickPlan('أعراف أساس')">أطلب أعراف أساس</a>
+      <a class="btn btn-out-light" href="#join" onclick="pickPlan('asas')">أطلب أعراف أساس</a>
     </div>
 
     <div class="plan featured rev">
@@ -324,7 +324,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>مدير حساب قانوني لمتابعة طلبات المنشأة</span></li>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>خصم <b>15%</b> على أتعاب القضايا والترافع</span></li>
       </ul>
-      <a class="btn btn-gold" href="#join" onclick="pickPlan('أعراف نمو')">أطلب أعراف نمو <span class="arr">←</span></a>
+      <a class="btn btn-gold" href="#join" onclick="pickPlan('numu')">أطلب أعراف نمو <span class="arr">←</span></a>
     </div>
 
     <div class="plan rev">
@@ -349,7 +349,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>فريق محامين مخصص للمنشأة</span></li>
         <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>خصم <b>20%</b> على أتعاب القضايا والترافع</span></li>
       </ul>
-      <a class="btn btn-out-light" href="#join" onclick="pickPlan('أعراف بلس')">أطلب أعراف بلس</a>
+      <a class="btn btn-out-light" href="#join" onclick="pickPlan('plus')">أطلب أعراف بلس</a>
     </div>
 
   </div>
@@ -371,8 +371,8 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
       <div class="jf"><label for="jName">اسم المنشأة</label><input id="jName" placeholder="مثال: شركة النخبة للتجارة"></div>
       <div class="jf"><label for="jType">نوع الكيان</label><select id="jType"><option>شركة</option><option>مؤسسة</option><option>جمعية / كيان غير ربحي</option></select></div>
       <div class="jf"><label for="jContact">اسم المسؤول ورقم جواله</label><input id="jContact" placeholder="الاسم — 05xxxxxxxx"></div>
-      <div class="jf"><label for="jPlan">الباقة المبدئية</label><select id="jPlan"><option>أعراف نمو</option><option>أعراف أساس</option><option>أعراف بلس</option><option>لست متأكداً — أريد استشارتكم</option></select></div>
-      <button class="btn btn-gold" id="joinSubmit" style="width:100%" onclick="sendJoin()">إرسال طلب الانضمام <span class="arr">←</span></button>
+      <div class="jf"><label for="jPlan">الباقة المبدئية</label><select id="jPlan"><option value="numu">أعراف نمو</option><option value="asas">أعراف أساس</option><option value="plus">أعراف بلس</option><option value="undecided">لست متأكداً — أريد استشارتكم</option></select></div>
+      <button type="button" class="btn btn-gold" id="joinSubmit" style="width:100%" onclick="sendJoin()">إرسال طلب الانضمام <span class="arr">←</span></button>
       <div class="join-note" id="joinStatus">يصل الطلب مباشرة إلى فريق أعراف، وسنتواصل معكم لاستكمال التفعيل</div>
     </div>
   </div>
@@ -413,7 +413,7 @@ function $(id){return document.getElementById(id)}
 function waUrl(message){return'https://wa.me/'+(window.ARAF_BIZ_WHATSAPP||'')+'?text='+encodeURIComponent(message)}
 var consultantBtn=$('consultantBtn');
 if(consultantBtn)consultantBtn.href=waUrl('السلام عليكم، أرغب بالتحدث مع مستشار بخصوص أعراف للأعمال.');
-function pickPlan(p){var s=$('jPlan');for(var i=0;i<s.options.length;i++)if(s.options[i].text===p)s.selectedIndex=i}
+function pickPlan(p){var s=$('jPlan');s.value=p}
 async function sendJoin(){
   var n=$('jName').value.trim(),c=$('jContact').value.trim();
   if(!n){$('jName').focus();return}
@@ -422,7 +422,7 @@ async function sendJoin(){
   btn.disabled=true;
   btn.textContent='جارٍ إرسال الطلب...';
   try{
-    var response=await fetch((window.ARAF_BUSINESS_API_BASE||'')+'/api/create-business-lead',{
+    var response=await fetch('/api/create-business-lead',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
