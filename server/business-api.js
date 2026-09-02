@@ -2,6 +2,7 @@
 
 const DEFAULT_SUPABASE_URL = 'https://yuoforvbxpwislmdrvvb.supabase.co';
 const DEFAULT_ALERT_EMAIL = 'ka89801@gmail.com';
+const DEFAULT_ALERT_FROM = 'Araf Business <notifications@araf.company>';
 
 function applyCors(req, res) {
   const origin = req.headers.origin || '*';
@@ -27,6 +28,10 @@ function sendJson(res, status, body) {
 
 function clean(value, maxLength) {
   return String(value == null ? '' : value).trim().slice(0, maxLength);
+}
+
+function alertRecipient() {
+  return clean(process.env.BUSINESS_ALERT_EMAIL || DEFAULT_ALERT_EMAIL, 320).toLowerCase();
 }
 
 function escapeHtml(value) {
@@ -175,7 +180,7 @@ async function createNotification(eventType, referenceId, subject, payload) {
     return await insertRow('business_email_notifications', {
       event_type: eventType,
       reference_id: referenceId || null,
-      recipient: process.env.BUSINESS_ALERT_EMAIL || DEFAULT_ALERT_EMAIL,
+      recipient: alertRecipient(),
       subject,
       status: 'pending',
       payload
@@ -212,8 +217,8 @@ async function sendAlert(subject, html) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      from: process.env.BUSINESS_ALERT_FROM || 'Araf Business <onboarding@resend.dev>',
-      to: [process.env.BUSINESS_ALERT_EMAIL || DEFAULT_ALERT_EMAIL],
+      from: process.env.BUSINESS_ALERT_FROM || DEFAULT_ALERT_FROM,
+      to: [alertRecipient()],
       subject,
       html
     })
