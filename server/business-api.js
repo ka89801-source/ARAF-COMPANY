@@ -3,6 +3,11 @@
 const DEFAULT_SUPABASE_URL = 'https://yuoforvbxpwislmdrvvb.supabase.co';
 const DEFAULT_ALERT_EMAIL = 'ka89801@gmail.com';
 const DEFAULT_ALERT_FROM = 'Araf Business <notifications@araf.company>';
+const DEFAULT_OPS_ORIGINS = [
+  'https://ka89801-source.github.io',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000'
+];
 
 function applyCors(req, res) {
   const origin = req.headers.origin || '*';
@@ -15,6 +20,40 @@ function applyCors(req, res) {
 
 function handleOptions(req, res) {
   applyCors(req, res);
+  if (req.method === 'OPTIONS') {
+    res.status(204).end();
+    return true;
+  }
+  return false;
+}
+
+function opsAllowedOrigins() {
+  const configured = clean(process.env.OPS_ALLOWED_ORIGINS, 2000)
+    .split(',')
+    .map(value => value.trim())
+    .filter(Boolean);
+  return Array.from(new Set(DEFAULT_OPS_ORIGINS.concat(configured)));
+}
+
+function applyOpsCors(req, res) {
+  const origin = clean(req.headers.origin, 500);
+  const allowed = opsAllowedOrigins();
+
+  if (origin && !allowed.includes(origin)) {
+    const error = new Error('ORIGIN_NOT_ALLOWED');
+    error.status = 403;
+    throw error;
+  }
+
+  if (origin) res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Cache-Control', 'no-store');
+}
+
+function handleOpsOptions(req, res) {
+  applyOpsCors(req, res);
   if (req.method === 'OPTIONS') {
     res.status(204).end();
     return true;
@@ -95,7 +134,7 @@ function bearerToken(req) {
   return match ? match[1] : '';
 }
 
-async function authenticatedBusiness(req) {
+async function authenticatedUser(req) {
   const token = bearerToken(req);
   if (!token) {
     const error = new Error('AUTH_REQUIRED');
@@ -110,15 +149,24 @@ async function authenticatedBusiness(req) {
       Authorization: 'Bearer ' + token
     }
   });
+
   if (!auth.ok || !auth.data || !auth.data.id) {
     const error = new Error('INVALID_SESSION');
     error.status = 401;
     throw error;
   }
 
+  return { token, user: auth.data };
+}
+
+async function authenticatedBusiness(req) {
+  const authenticated = await authenticatedUser(req);
+  const { token, user } = authenticated;
+  const { supabaseUrl } = config();
+
   const query = new URLSearchParams({
     select: 'id,code,name,entity_type,plan_key,subscription_status',
-    auth_user_id: 'eq.' + auth.data.id,
+    auth_user_id: 'eq.' + user.id,
     limit: '1'
   });
   const entityResult = await fetchJson(
@@ -132,7 +180,64 @@ async function authenticatedBusiness(req) {
     throw error;
   }
 
-  return { token, user: auth.data, entity };
+  return { token, user, entity };
+}
+
+function configuredOpsEmails() {
+  const values = [
+    process.env.OPS_ADMIN_EMAILS,
+    process.env.BUSINESS_ALERT_EMAIL || DEFAULT_ALERT_EMAIL
+  ];
+
+  return new Set(
+    values
+      .join(',')
+      .split(',')
+      .map(value => clean(value, 320).toLowerCase())
+      .filter(Boolean)
+  );
+}
+
+async function authenticatedOpsAdmin(req, roles) {
+  const authenticated = await authenticatedUser(req);
+  const { supabaseUrl } = config();
+  const allowedRoles = Array.isArray(roles) && roles.length
+    ? roles
+    : ['admin', 'manager'];
+
+  const query = new URLSearchParams({
+    select: 'auth_user_id,employee_external_id,display_name,admin_role,active',
+    auth_user_id: 'eq.' + authenticated.user.id,
+    active: 'eq.true',
+    limit: '1'
+  });
+  const adminResult = await fetchJson(
+    supabaseUrl + '/rest/v1/business_admins?' + query.toString(),
+    { headers: serviceHeaders() }
+  );
+  let admin = adminResult.ok && Array.isArray(adminResult.data)
+    ? adminResult.data[0]
+    : null;
+
+  const email = clean(authenticated.user.email, 320).toLowerCase();
+  if (!admin && configuredOpsEmails().has(email)) {
+    admin = {
+      auth_user_id: authenticated.user.id,
+      employee_external_id: null,
+      display_name: email,
+      admin_role: 'admin',
+      active: true,
+      env_fallback: true
+    };
+  }
+
+  if (!admin || !allowedRoles.includes(admin.admin_role)) {
+    const error = new Error('OPS_ACCESS_DENIED');
+    error.status = 403;
+    throw error;
+  }
+
+  return Object.assign(authenticated, { admin });
 }
 
 async function callBusinessRpc(name, payload, userToken) {
@@ -149,6 +254,22 @@ async function callBusinessRpc(name, payload, userToken) {
   });
 }
 
+async function callServiceRpc(name, payload) {
+  const { supabaseUrl } = config();
+  const result = await fetchJson(supabaseUrl + '/rest/v1/rpc/' + name, {
+    method: 'POST',
+    headers: serviceHeaders({ Prefer: 'return=representation' }),
+    body: JSON.stringify(payload || {})
+  });
+  if (!result.ok) {
+    const error = new Error('DATABASE_RPC_FAILED');
+    error.status = result.status;
+    error.details = result.data;
+    throw error;
+  }
+  return result.data;
+}
+
 async function insertRow(table, row) {
   const { supabaseUrl } = config();
   const result = await fetchJson(supabaseUrl + '/rest/v1/' + table, {
@@ -162,6 +283,80 @@ async function insertRow(table, row) {
     throw error;
   }
   return Array.isArray(result.data) ? result.data[0] : result.data;
+}
+
+async function selectRows(table, params) {
+  const { supabaseUrl } = config();
+  const query = params instanceof URLSearchParams
+    ? params
+    : new URLSearchParams(params || {});
+  const suffix = query.toString() ? '?' + query.toString() : '';
+  const result = await fetchJson(supabaseUrl + '/rest/v1/' + table + suffix, {
+    headers: serviceHeaders()
+  });
+  if (!result.ok) {
+    const error = new Error('DATABASE_READ_FAILED');
+    error.status = result.status;
+    error.details = result.data;
+    throw error;
+  }
+  return Array.isArray(result.data) ? result.data : [];
+}
+
+async function patchRows(table, params, patch, returnRepresentation) {
+  const { supabaseUrl } = config();
+  const query = params instanceof URLSearchParams
+    ? params
+    : new URLSearchParams(params || {});
+  const result = await fetchJson(
+    supabaseUrl + '/rest/v1/' + table + '?' + query.toString(),
+    {
+      method: 'PATCH',
+      headers: serviceHeaders({
+        Prefer: returnRepresentation === false ? 'return=minimal' : 'return=representation'
+      }),
+      body: JSON.stringify(patch)
+    }
+  );
+  if (!result.ok) {
+    const error = new Error('DATABASE_UPDATE_FAILED');
+    error.status = result.status;
+    error.details = result.data;
+    throw error;
+  }
+  return Array.isArray(result.data) ? result.data : [];
+}
+
+async function deleteRows(table, params) {
+  const { supabaseUrl } = config();
+  const query = params instanceof URLSearchParams
+    ? params
+    : new URLSearchParams(params || {});
+  const result = await fetchJson(
+    supabaseUrl + '/rest/v1/' + table + '?' + query.toString(),
+    {
+      method: 'DELETE',
+      headers: serviceHeaders({ Prefer: 'return=minimal' })
+    }
+  );
+  if (!result.ok) {
+    const error = new Error('DATABASE_DELETE_FAILED');
+    error.status = result.status;
+    error.details = result.data;
+    throw error;
+  }
+}
+
+function adminSupabase() {
+  const { createClient } = require('@supabase/supabase-js');
+  const { supabaseUrl, serverSecretKey } = config();
+  return createClient(supabaseUrl, serverSecretKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false
+    }
+  });
 }
 
 async function updateRow(table, id, patch) {
@@ -246,13 +441,22 @@ function errorResponse(error) {
 module.exports = {
   applyCors,
   handleOptions,
+  applyOpsCors,
+  handleOpsOptions,
   sendJson,
   clean,
   escapeHtml,
   readBody,
+  authenticatedUser,
   authenticatedBusiness,
+  authenticatedOpsAdmin,
   callBusinessRpc,
+  callServiceRpc,
   insertRow,
+  selectRows,
+  patchRows,
+  deleteRows,
+  adminSupabase,
   createNotification,
   finishNotification,
   sendAlert,

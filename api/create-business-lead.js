@@ -105,17 +105,32 @@ module.exports = async function handler(req, res) {
       return sendJson(res, 400, { error: 'يرجى إدخال اسم المسؤول ورقم الجوال.', field: 'contact_details' });
     }
 
-    const row = await insertRow('business_activation_requests', {
+    const leadRow = {
       request_kind: requestKind,
       entity_name: entityName,
       entity_type: entityType || null,
       entity_code: entityCode || null,
+      contact_name: requestKind === 'activation' ? contactName || null : null,
+      contact_phone: requestKind === 'activation' ? phone || null : null,
       contact_details: contactDetails || null,
       current_plan: currentPlan || null,
       requested_plan: requestedPlan,
       source: requestKind === 'upgrade' ? 'business_portal' : 'business_site',
       metadata: context ? { auth_user_id: context.user.id } : {}
-    });
+    };
+
+    let row;
+    try {
+      row = await insertRow('business_activation_requests', leadRow);
+    } catch (writeError) {
+      // يسمح باستمرار استقبال الطلبات إذا سبق نشر الكود تشغيل ملف SQL الجديد.
+      // بعد تشغيل migration ستُحفظ الخانتان منفصلتين تلقائيًا.
+      const details = JSON.stringify(writeError.details || {});
+      if (!/contact_name|contact_phone/i.test(details)) throw writeError;
+      delete leadRow.contact_name;
+      delete leadRow.contact_phone;
+      row = await insertRow('business_activation_requests', leadRow);
+    }
 
     const kindLabel = requestKind === 'upgrade' ? 'ترقية باقة' : 'تفعيل منشأة';
     const emailSubject = 'طلب ' + kindLabel + ' — ' + entityName;
