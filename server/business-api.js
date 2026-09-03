@@ -4,6 +4,7 @@ const DEFAULT_SUPABASE_URL = 'https://yuoforvbxpwislmdrvvb.supabase.co';
 const DEFAULT_ALERT_EMAIL = 'ka89801@gmail.com';
 const DEFAULT_ALERT_FROM = 'Araf Business <notifications@araf.company>';
 const DEFAULT_OPS_ORIGINS = [
+  'https://araf-ops.vercel.app',
   'https://ka89801-source.github.io',
   'http://localhost:3000',
   'http://127.0.0.1:3000'
