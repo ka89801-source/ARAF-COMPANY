@@ -35,7 +35,8 @@ const PLAN_ALIASES = {
 };
 
 function normalizePlan(value) {
-  return PLAN_ALIASES[clean(value, 100)] || '';
+  const key = clean(value, 100);
+  return Object.hasOwn(PLAN_ALIASES, key) ? PLAN_ALIASES[key] : '';
 }
 
 function normalizeSaudiMobile(value) {
