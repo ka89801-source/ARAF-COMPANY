@@ -140,12 +140,12 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--t1);line-
 .join-step .n{width:28px;height:28px;border-radius:9px;background:rgba(201,169,110,.14);border:1px solid rgba(217,191,142,.35);color:var(--gdl);font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .join-form{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:28px 26px;backdrop-filter:blur(8px)}
 .jf{margin-bottom:14px}
-.jf label{display:block;font-size:12px;color:rgba(255,255,255,.55);font-weight:500;margin-bottom:6px}
+.jf label{display:block;font-size:12px;color:rgba(255,255,255,.82);font-weight:500;margin-bottom:6px}
 .jf input,.jf select{width:100%;padding:13px 15px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font-family:inherit;font-size:16px;outline:none;transition:border-color .3s var(--ease),box-shadow .3s var(--ease)}
 .jf select option{color:var(--t1)}
-.jf input::placeholder{color:rgba(255,255,255,.28)}
+.jf input::placeholder{color:rgba(255,255,255,.65)}
 .jf input:focus,.jf select:focus{border-color:rgba(201,169,110,.6);box-shadow:0 0 0 4px rgba(201,169,110,.13)}
-.join-note{font-size:11px;color:rgba(255,255,255,.38);line-height:1.9;margin-top:12px;text-align:center;font-weight:300}
+.join-note{font-size:11px;color:rgba(255,255,255,.75);line-height:1.9;margin-top:12px;text-align:center;font-weight:300}
 .dark-scale{position:absolute;left:-30px;bottom:-40px;width:300px;opacity:.13;pointer-events:none}
 .dark-scale path,.dark-scale line,.dark-scale circle{stroke:var(--gdl);stroke-width:1.4;fill:none;stroke-linecap:round}
 
@@ -416,6 +416,7 @@ var consultantBtn=$('consultantBtn');
 if(consultantBtn)consultantBtn.href=waUrl('السلام عليكم، أرغب بالتحدث مع مستشار بخصوص أعراف للأعمال.');
 function pickPlan(p){var s=$('jPlan');s.value=p}
 async function sendJoin(){
+  if($('joinSubmit').disabled)return;
   var n=$('jName').value.trim(),contactName=$('jContactName').value.trim(),phone=$('jPhone').value.trim(),p=$('jPlan').value;
   var btn=$('joinSubmit'),status=$('joinStatus');
   function showJoinError(message,fieldId){
