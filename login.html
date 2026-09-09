@@ -184,11 +184,15 @@ $('BACK').onclick=function(){
   }
 })();
 
+function normalizeDigits(value){
+  return value.replace(/[٠-٩]/g,function(d){return'٠١٢٣٤٥٦٧٨٩'.indexOf(d)})
+    .replace(/[۰-۹]/g,function(d){return'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)});
+}
 async function tryLogin(){
   if(loggingIn)return;
 
-  var code=$('bizCode').value.trim().toUpperCase();
-  var pin=$('bizPin').value.trim();
+  var code=normalizeDigits($('bizCode').value).trim().toUpperCase();
+  var pin=normalizeDigits($('bizPin').value).trim();
   var email=window.ARAF_AUTH_EMAIL(code);
 
   if(!email||!/^[0-9]{8}$/.test(pin)){

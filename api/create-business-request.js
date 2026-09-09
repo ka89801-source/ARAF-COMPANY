@@ -48,7 +48,7 @@ module.exports = async function handler(req, res) {
     const validIdempotencyKey =
       /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(idempotencyKey);
 
-    if (!SERVICES[serviceKey] || subject.length < 3 || !validIdempotencyKey) {
+    if (!Object.hasOwn(SERVICES, serviceKey) || subject.length < 3 || !validIdempotencyKey) {
       return sendJson(res, 400, { error: 'بيانات الطلب غير مكتملة.' });
     }
 
